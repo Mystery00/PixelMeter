@@ -5,13 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "vip.mystery0.pixel.pulse"
-    compileSdk {
-        version = release(36)
-    }
+    namespace = "vip.mystery0.pixelpulse"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "vip.mystery0.pixel.pulse"
+        applicationId = "vip.mystery0.pixelpulse"
         minSdk = 29
         targetSdk = 36
         versionCode = 1
@@ -33,12 +31,14 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+        freeCompilerArgs.add("-Xopt-in=kotlin.RequiresOptIn")
     }
 }
 
@@ -50,4 +50,15 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.material.icons.core)
+    implementation(libs.material.icons.extended)
+
+    // Feature Dependencies
+    implementation(libs.androidx.palette.ktx)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.rikka.shizuku.api)
+    implementation(libs.rikka.shizuku.provider)
+    implementation(libs.coil.compose)
+    implementation(libs.hiddenapibypass)
 }
