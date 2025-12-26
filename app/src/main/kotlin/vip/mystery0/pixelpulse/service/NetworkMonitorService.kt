@@ -5,7 +5,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.os.Build
 import android.os.IBinder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,13 +16,14 @@ import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import vip.mystery0.pixelpulse.data.repository.NetworkRepository
 import vip.mystery0.pixelpulse.data.source.NetSpeedData
+import vip.mystery0.pixelpulse.ui.overlay.OverlayWindow
 
 class NetworkMonitorService : Service() {
 
     private val repository: NetworkRepository by inject()
     private val notificationHelper by lazy { NotificationHelper(this) }
     private val notificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
-    private val overlayWindow: vip.mystery0.pixelpulse.ui.overlay.OverlayWindow by inject()
+    private val overlayWindow: OverlayWindow by inject()
 
     private var serviceJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.Default)
@@ -39,15 +39,11 @@ class NetworkMonitorService : Service() {
         val initialNotif = notificationHelper.buildNotification(NetSpeedData(0, 0))
 
         try {
-            if (Build.VERSION.SDK_INT >= 29) {
-                startForeground(
-                    NotificationHelper.NOTIFICATION_ID,
-                    initialNotif,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-                )
-            } else {
-                startForeground(NotificationHelper.NOTIFICATION_ID, initialNotif)
-            }
+            startForeground(
+                NotificationHelper.NOTIFICATION_ID,
+                initialNotif,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            )
         } catch (e: Exception) {
             e.printStackTrace()
             stopSelf()
@@ -94,6 +90,6 @@ class NetworkMonitorService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         serviceJob?.cancel()
-        stopForeground(true)
+        stopForeground(STOP_FOREGROUND_REMOVE)
     }
 }

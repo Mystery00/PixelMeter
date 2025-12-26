@@ -15,6 +15,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import org.koin.androidx.compose.koinViewModel
@@ -48,9 +51,9 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    viewModel: MainViewModel = koinViewModel()
-) {
+fun HomeScreen() {
+    val viewModel: MainViewModel = koinViewModel()
+
     val speed by viewModel.currentSpeed.collectAsState()
     val isShizuku by viewModel.isShizukuMode.collectAsState()
     val isGranted by viewModel.shizukuPermissionGranted.collectAsState()
@@ -134,16 +137,23 @@ fun HomeScreen(
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                androidx.compose.material3.Button(onClick = {
+                                Button(onClick = {
                                     serviceError?.let { (_, action) ->
                                         val intent = Intent(action)
                                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                        if (action == Settings.ACTION_MANAGE_OVERLAY_PERMISSION ||
-                                            action == Settings.ACTION_APP_NOTIFICATION_SETTINGS ||
-                                            action == Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                                        ) {
-                                            intent.data =
-                                                android.net.Uri.parse("package:${context.packageName}")
+                                        when (action) {
+                                            Settings.ACTION_APP_NOTIFICATION_SETTINGS -> {
+                                                intent.putExtra(
+                                                    Settings.EXTRA_APP_PACKAGE,
+                                                    context.packageName
+                                                )
+                                            }
+
+                                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS -> {
+                                                intent.data =
+                                                    "package:${context.packageName}".toUri()
+                                            }
                                         }
                                         context.startActivity(intent)
                                         viewModel.clearError()
@@ -151,9 +161,9 @@ fun HomeScreen(
                                 }) {
                                     Text("Request / Fix")
                                 }
-                                androidx.compose.material3.Button(
+                                Button(
                                     onClick = { viewModel.clearError() },
-                                    colors = androidx.compose.material3.ButtonDefaults.textButtonColors()
+                                    colors = ButtonDefaults.textButtonColors()
                                 ) {
                                     Text("Dismiss")
                                 }
@@ -203,10 +213,10 @@ fun HomeScreen(
                                 Text("Start")
                             }
                             // Stop Button
-                            androidx.compose.material3.Button(
+                            Button(
                                 onClick = { viewModel.stopService() },
                                 enabled = isServiceRunning,
-                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.error
                                 ),
                                 modifier = Modifier.weight(1f)
@@ -250,7 +260,7 @@ fun HomeScreen(
                                     style = MaterialTheme.typography.bodySmall
                                 )
                             } else {
-                                androidx.compose.material3.Button(onClick = { viewModel.requestShizukuPermission() }) {
+                                Button(onClick = { viewModel.requestShizukuPermission() }) {
                                     Text("Request Permission")
                                 }
                             }

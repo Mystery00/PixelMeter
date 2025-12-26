@@ -1,6 +1,5 @@
 package vip.mystery0.pixelpulse.data.source.impl
 
-import android.os.Build
 import android.os.IBinder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -33,12 +32,10 @@ class ShizukuSpeedDataSource(
     private var lastTime = 0L
 
     init {
-        if (Build.VERSION.SDK_INT >= 28) {
-            try {
-                HiddenApiBypass.addHiddenApiExemptions("")
-            } catch (e: Throwable) {
-                e.printStackTrace()
-            }
+        try {
+            HiddenApiBypass.addHiddenApiExemptions("")
+        } catch (e: Throwable) {
+            e.printStackTrace()
         }
         initService()
     }
