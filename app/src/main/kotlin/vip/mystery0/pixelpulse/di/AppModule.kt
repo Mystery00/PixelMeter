@@ -13,9 +13,12 @@ val appModule = module {
     single {
         androidContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
+    single {
+        androidContext().getSharedPreferences("pixel_pulse_prefs", Context.MODE_PRIVATE)
+    }
     single { SpeedDataSource(get()) }
 
-    single { NetworkRepository(get()) }
+    single { NetworkRepository(get(), get()) }
 
     factory { NotificationHelper(androidContext()) }
     factory { OverlayWindow(androidContext()) }

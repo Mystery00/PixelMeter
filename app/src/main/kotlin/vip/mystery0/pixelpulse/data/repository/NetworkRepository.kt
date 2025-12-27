@@ -1,5 +1,7 @@
 package vip.mystery0.pixelpulse.data.repository
 
+import android.content.SharedPreferences
+import androidx.core.content.edit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -14,11 +16,15 @@ import vip.mystery0.pixelpulse.data.source.NetSpeedData
 import vip.mystery0.pixelpulse.data.source.impl.SpeedDataSource
 
 class NetworkRepository(
-    private val standardDataSource: SpeedDataSource
+    private val standardDataSource: SpeedDataSource,
+    private val prefs: SharedPreferences
 ) : KoinComponent {
 
     private val _isOverlayEnabled = MutableStateFlow(false)
     val isOverlayEnabled: StateFlow<Boolean> = _isOverlayEnabled.asStateFlow()
+
+    private val _isLiveUpdateEnabled = MutableStateFlow(false)
+    val isLiveUpdateEnabled: StateFlow<Boolean> = _isLiveUpdateEnabled.asStateFlow()
 
     private val _netSpeed = MutableStateFlow(NetSpeedData(0, 0))
     val netSpeed: StateFlow<NetSpeedData> = _netSpeed.asStateFlow()
@@ -30,8 +36,18 @@ class NetworkRepository(
     private var lastTotalTxBytes = 0L
     private var lastTime = 0L
 
+    init {
+        // Initialize Live Update settings
+        _isLiveUpdateEnabled.value = prefs.getBoolean("key_live_update", false)
+    }
+
     fun setOverlayEnabled(enable: Boolean) {
         _isOverlayEnabled.value = enable
+    }
+
+    fun setLiveUpdateEnabled(enable: Boolean) {
+        _isLiveUpdateEnabled.value = enable
+        prefs.edit { putBoolean("key_live_update", enable) }
     }
 
     fun startMonitoring() {

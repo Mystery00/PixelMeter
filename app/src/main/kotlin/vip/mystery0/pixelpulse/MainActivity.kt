@@ -62,6 +62,7 @@ class MainActivity : ComponentActivity() {
         val speed by viewModel.currentSpeed.collectAsState()
         val isServiceRunning by viewModel.isServiceRunning.collectAsState()
         val isOverlayEnabled by viewModel.isOverlayEnabled.collectAsState()
+        val isLiveUpdateEnabled by viewModel.isLiveUpdateEnabled.collectAsState()
         val serviceError by viewModel.serviceStartError.collectAsState()
 
         val context = LocalContext.current
@@ -201,6 +202,15 @@ class MainActivity : ComponentActivity() {
                         subtitle = "Show floating window",
                         checked = isOverlayEnabled,
                         onCheckedChange = { viewModel.setOverlayEnabled(it) }
+                    )
+                }
+
+                item {
+                    ConfigRow(
+                        title = "Enable Live Update",
+                        subtitle = "Use status bar chip (Android 15+)",
+                        checked = isLiveUpdateEnabled,
+                        onCheckedChange = { viewModel.setLiveUpdateEnabled(it) }
                     )
                 }
             }

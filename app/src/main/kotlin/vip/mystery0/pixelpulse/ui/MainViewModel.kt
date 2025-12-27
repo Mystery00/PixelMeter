@@ -3,7 +3,6 @@ package vip.mystery0.pixelpulse.ui
 import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
@@ -23,6 +22,8 @@ class MainViewModel(
 
     val isOverlayEnabled = repository.isOverlayEnabled
 
+    val isLiveUpdateEnabled = repository.isLiveUpdateEnabled
+
     private val _isServiceRunning = MutableStateFlow(false)
     val isServiceRunning = _isServiceRunning.asStateFlow()
 
@@ -33,16 +34,14 @@ class MainViewModel(
         _serviceStartError.value = null
 
         // 1. Check Notification Permission (Android 13+)
-        if (Build.VERSION.SDK_INT >= 33) {
-            if (ContextCompat.checkSelfPermission(
-                    application,
-                    android.Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                _serviceStartError.value =
-                    "Notification permission required" to Settings.ACTION_APP_NOTIFICATION_SETTINGS
-                return
-            }
+        if (ContextCompat.checkSelfPermission(
+                application,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            _serviceStartError.value =
+                "Notification permission required" to Settings.ACTION_APP_NOTIFICATION_SETTINGS
+            return
         }
 
         // 2. Check Overlay Permission if enabled
@@ -79,5 +78,9 @@ class MainViewModel(
 
     fun setOverlayEnabled(enable: Boolean) {
         repository.setOverlayEnabled(enable)
+    }
+
+    fun setLiveUpdateEnabled(enable: Boolean) {
+        repository.setLiveUpdateEnabled(enable)
     }
 }

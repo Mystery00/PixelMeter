@@ -18,6 +18,6 @@ class MainApplication : Application() {
         }
 
         // Initialize Notification Channel immediately
-        NotificationHelper(this).createNotificationChannel()
+        NotificationHelper.createNotificationChannel(this)
     }
 }
