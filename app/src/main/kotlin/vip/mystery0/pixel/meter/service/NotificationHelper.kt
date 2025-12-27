@@ -23,7 +23,8 @@ import kotlin.math.roundToInt
 class NotificationHelper(private val context: Context) {
     companion object {
         const val CHANNEL_ID = "net_monitor"
-        const val CHANNEL_NAME = "Network Monitor"
+
+        // CHANNEL_NAME is removed in favor of string resource
         const val NOTIFICATION_ID = 1001
 
         fun createNotificationChannel(context: Context) {
@@ -32,13 +33,13 @@ class NotificationHelper(private val context: Context) {
 
             val group = NotificationChannelGroup(
                 CHANNEL_ID,
-                CHANNEL_NAME
+                context.getString(R.string.notification_channel_name)
             )
             notificationManager.createNotificationChannelGroup(group)
 
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                CHANNEL_NAME,
+                context.getString(R.string.notification_channel_name),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
                 description = "Shows real-time network speed in status bar"
@@ -101,8 +102,8 @@ class NotificationHelper(private val context: Context) {
         if (!isNotificationEnabled) {
             // Notification Disabled (Static Mode)
             return builder
-                .setContentTitle("Network Speed")
-                .setContentText("Monitoring in background...")
+                .setContentTitle(context.getString(R.string.notification_content_title))
+                .setContentText(context.getString(R.string.notification_content_text))
                 .setSmallIcon(R.drawable.ic_speed)
                 .build()
         }
@@ -112,7 +113,7 @@ class NotificationHelper(private val context: Context) {
             // Live Update Mode
             val statusText = NetworkRepository.formatSpeedTextForLiveUpdate(speed.totalSpeed)
             builder
-                .setContentTitle("Network Speed")
+                .setContentTitle(context.getString(R.string.notification_content_title))
                 .setContentText(
                     "▼ ${NetworkRepository.formatSpeedLine(speed.downloadSpeed)} ▲ ${
                         NetworkRepository.formatSpeedLine(speed.uploadSpeed)
@@ -137,7 +138,7 @@ class NotificationHelper(private val context: Context) {
             val smallIcon = IconCompat.createWithBitmap(bitmap)
 
             builder
-                .setContentTitle("Network Speed")
+                .setContentTitle(context.getString(R.string.notification_content_title))
                 .setContentText(
                     "RX ${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}  TX ${
                         NetworkRepository.formatSpeedLine(speed.uploadSpeed)

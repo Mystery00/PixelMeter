@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import vip.mystery0.pixel.meter.R
 import vip.mystery0.pixel.meter.data.repository.NetworkRepository
 import vip.mystery0.pixel.meter.service.NetworkMonitorService
 
@@ -46,7 +47,7 @@ class MainViewModel(
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             _serviceStartError.value =
-                "Notification permission required" to Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                application.getString(R.string.error_notification_permission) to Settings.ACTION_APP_NOTIFICATION_SETTINGS
             return
         }
 
@@ -54,7 +55,7 @@ class MainViewModel(
         if (isOverlayEnabled.value) {
             if (!Settings.canDrawOverlays(application)) {
                 _serviceStartError.value =
-                    "Overlay permission required for Floating Window" to Settings.ACTION_MANAGE_OVERLAY_PERMISSION
+                    application.getString(R.string.error_overlay_permission) to Settings.ACTION_MANAGE_OVERLAY_PERMISSION
                 return
             }
         }
@@ -65,7 +66,10 @@ class MainViewModel(
         } catch (e: Exception) {
             Log.e(TAG, "startService: start foreground service error", e)
             _serviceStartError.value =
-                "Failed to start service: ${e.message}" to Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                application.getString(
+                    R.string.error_service_start_failed,
+                    e.message
+                ) to Settings.ACTION_APPLICATION_DETAILS_SETTINGS
         }
     }
 

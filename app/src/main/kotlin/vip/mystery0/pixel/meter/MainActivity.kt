@@ -36,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import vip.mystery0.pixel.meter.data.source.NetSpeedData
@@ -70,7 +71,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
 
         Scaffold(
-            topBar = { TopAppBar(title = { Text("PixelMeter") }) }
+            topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) }
         ) { padding ->
             LazyColumn(
                 modifier = Modifier
@@ -84,7 +85,7 @@ class MainActivity : ComponentActivity() {
 
                 item {
                     Text(
-                        "Configuration",
+                        stringResource(R.string.title_configuration),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -96,12 +97,12 @@ class MainActivity : ComponentActivity() {
                         Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text(
-                                    "Service Error",
+                                    stringResource(R.string.error_service_title),
                                     style = MaterialTheme.typography.labelLarge,
                                     color = MaterialTheme.colorScheme.onErrorContainer
                                 )
                                 Text(
-                                    serviceError?.first ?: "Unknown error",
+                                    serviceError?.first ?: stringResource(R.string.error_unknown),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onErrorContainer
                                 )
@@ -129,13 +130,13 @@ class MainActivity : ComponentActivity() {
                                             viewModel.clearError()
                                         }
                                     }) {
-                                        Text("Request / Fix")
+                                        Text(stringResource(R.string.action_request_fix))
                                     }
                                     Button(
                                         onClick = { viewModel.clearError() },
                                         colors = ButtonDefaults.textButtonColors()
                                     ) {
-                                        Text("Dismiss")
+                                        Text(stringResource(R.string.action_dismiss))
                                     }
                                 }
                             }
@@ -145,7 +146,7 @@ class MainActivity : ComponentActivity() {
 
                 item {
                     Text(
-                        "Monitor Control",
+                        stringResource(R.string.title_monitor_control),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -167,7 +168,9 @@ class MainActivity : ComponentActivity() {
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = if (isServiceRunning) "Monitor is Running" else "Monitor is Stopped",
+                                    text = if (isServiceRunning) stringResource(R.string.status_monitor_running) else stringResource(
+                                        R.string.status_monitor_stopped
+                                    ),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = if (isServiceRunning) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -180,7 +183,7 @@ class MainActivity : ComponentActivity() {
                                     enabled = !isServiceRunning,
                                     modifier = Modifier.weight(1f)
                                 ) {
-                                    Text("Start")
+                                    Text(stringResource(R.string.action_start))
                                 }
                                 // Stop Button
                                 Button(
@@ -191,7 +194,7 @@ class MainActivity : ComponentActivity() {
                                     ),
                                     modifier = Modifier.weight(1f)
                                 ) {
-                                    Text("Stop")
+                                    Text(stringResource(R.string.action_stop))
                                 }
                             }
                         }
@@ -200,8 +203,8 @@ class MainActivity : ComponentActivity() {
 
                 item {
                     ConfigRow(
-                        title = "Enable Overlay",
-                        subtitle = "Show floating window",
+                        title = stringResource(R.string.config_enable_overlay),
+                        subtitle = stringResource(R.string.config_enable_overlay_desc),
                         checked = isOverlayEnabled,
                         onCheckedChange = { viewModel.setOverlayEnabled(it) }
                     )
@@ -210,8 +213,8 @@ class MainActivity : ComponentActivity() {
                 if (isOverlayEnabled) {
                     item {
                         ConfigRow(
-                            title = "Lock Floating Window",
-                            subtitle = "Prevent window from being moved",
+                            title = stringResource(R.string.config_lock_overlay),
+                            subtitle = stringResource(R.string.config_lock_overlay_desc),
                             checked = isOverlayLocked,
                             onCheckedChange = { viewModel.setOverlayLocked(it) }
                         )
@@ -220,8 +223,8 @@ class MainActivity : ComponentActivity() {
 
                 item {
                     ConfigRow(
-                        title = "Enable Notification",
-                        subtitle = "Show network speed in notification",
+                        title = stringResource(R.string.config_enable_notification),
+                        subtitle = stringResource(R.string.config_enable_notification_desc),
                         checked = isNotificationEnabled,
                         onCheckedChange = { viewModel.setNotificationEnabled(it) }
                     )
@@ -229,8 +232,8 @@ class MainActivity : ComponentActivity() {
 
                 item {
                     ConfigRow(
-                        title = "Enable Live Update",
-                        subtitle = "Use status bar chip",
+                        title = stringResource(R.string.config_enable_live_update),
+                        subtitle = stringResource(R.string.config_enable_live_update_desc),
                         checked = isLiveUpdateEnabled,
                         onCheckedChange = { viewModel.setLiveUpdateEnabled(it) }
                     )
@@ -251,7 +254,10 @@ fun SpeedDashboardCard(speed: NetSpeedData) {
             modifier = Modifier.padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Total Speed", style = MaterialTheme.typography.labelMedium)
+            Text(
+                stringResource(R.string.label_total_speed),
+                style = MaterialTheme.typography.labelMedium
+            )
             Text(
                 formatSpeed(speed.totalSpeed),
                 style = MaterialTheme.typography.displayMedium,
@@ -263,14 +269,20 @@ fun SpeedDashboardCard(speed: NetSpeedData) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Download", style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        stringResource(R.string.label_download),
+                        style = MaterialTheme.typography.bodySmall
+                    )
                     Text(
                         "▼ " + formatSpeed(speed.downloadSpeed),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Upload", style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        stringResource(R.string.label_upload),
+                        style = MaterialTheme.typography.bodySmall
+                    )
                     Text(
                         "▲ " + formatSpeed(speed.uploadSpeed),
                         style = MaterialTheme.typography.titleMedium

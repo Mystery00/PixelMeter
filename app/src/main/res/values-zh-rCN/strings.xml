@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">PixelMeter</string>
+    <string name="title_configuration">权限配置</string>
+    <string name="title_monitor_control">服务运行控制</string>
+    <string name="label_total_speed">总网速</string>
+    <string name="label_download">下载</string>
+    <string name="label_upload">上传</string>
+    <string name="status_monitor_running">服务运行中</string>
+    <string name="status_monitor_stopped">服务已停止</string>
+    <string name="action_start">启动</string>
+    <string name="action_stop">停止</string>
+    <string name="action_request_fix">修复</string>
+    <string name="action_dismiss">忽略</string>
+
+    <string name="config_enable_overlay">启用悬浮窗</string>
+    <string name="config_enable_overlay_desc">显示桌面悬浮窗</string>
+    <string name="config_lock_overlay">锁定悬浮窗</string>
+    <string name="config_lock_overlay_desc">防止悬浮窗被移动</string>
+    <string name="config_enable_notification">启用通知</string>
+    <string name="config_enable_notification_desc">在通知栏显示网速</string>
+    <string name="config_enable_live_update">启用实时更新</string>
+    <string name="config_enable_live_update_desc">使用实时网速更新通知栏</string>
+
+    <string name="error_service_title">服务错误</string>
+    <string name="error_unknown">未知错误</string>
+    <string name="error_notification_permission">需要授予通知权限</string>
+    <string name="error_overlay_permission">悬浮窗需要显示在其他应用上层的权限</string>
+    <string name="error_service_start_failed">启动服务失败: %1$s</string>
+
+    <string name="notification_channel_name">网速显示服务</string>
+    <string name="notification_content_title">网速显示</string>
+    <string name="notification_content_text">正在运行…</string>
+</resources>

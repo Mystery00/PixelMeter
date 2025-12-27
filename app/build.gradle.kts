@@ -111,3 +111,5 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.androidx.datastore.preferences)
 }
+
+apply(from = rootProject.file("signing.gradle"))
