@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PixelPulse"
+rootProject.name = "PixelMeter"
 include(":app")

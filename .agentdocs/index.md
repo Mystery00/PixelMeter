@@ -25,5 +25,5 @@
 
 ## 🔗 相关资源
 
-- [GitHub Repository](https://github.com/Mystery00/PixelPulse)
+- [GitHub Repository](https://github.com/Mystery00/PixelMeter)
 - [GEMINI Development Guidelines](../GEMINI.md)

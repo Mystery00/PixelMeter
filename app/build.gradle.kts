@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "vip.mystery0.pixelpulse"
+    namespace = "vip.mystery0.pixel.meter"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "vip.mystery0.pixelpulse"
+        applicationId = "vip.mystery0.pixel.meter"
         minSdk = 36
         targetSdk = 36
         versionCode = 1

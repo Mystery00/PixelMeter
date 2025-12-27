@@ -1,4 +1,4 @@
-package vip.mystery0.pixelpulse.data.source
+package vip.mystery0.pixel.meter.data.source
 
 import androidx.compose.runtime.Immutable
 

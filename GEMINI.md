@@ -51,7 +51,7 @@
 ### 文档分类
 
 - `prd/` - 产品与需求
-    - `prd/requirements.md` - 核心功能需求 (Pixel Pulse 功能清单)
+  - `prd/requirements.md` - 核心功能需求 (PixelMeter 功能清单)
 - `architecture/` - 架构与技术细节
     - `architecture/data-source-strategy.md` - 混合数据源策略 (Shizuku vs Standard API)
     - `architecture/service-lifecycle.md` - 前台服务保活与 Android 14+ 适配
@@ -61,7 +61,7 @@
 
 ### 全局重要记忆
 
-- **项目名称**: Pixel Pulse
+- **项目名称**: PixelMeter
 - **设备支持**:
     - 核心目标: Google Pixel 系列 (Android 10+)。
     - 兼容目标: 运行原生/类原生 Android (AOSP) 的设备。

@@ -1,4 +1,4 @@
-package vip.mystery0.pixelpulse.service
+package vip.mystery0.pixel.meter.service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -14,10 +14,10 @@ import android.graphics.Typeface
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.IconCompat
-import vip.mystery0.pixelpulse.MainActivity
-import vip.mystery0.pixelpulse.R
-import vip.mystery0.pixelpulse.data.repository.NetworkRepository
-import vip.mystery0.pixelpulse.data.source.NetSpeedData
+import vip.mystery0.pixel.meter.MainActivity
+import vip.mystery0.pixel.meter.R
+import vip.mystery0.pixel.meter.data.repository.NetworkRepository
+import vip.mystery0.pixel.meter.data.source.NetSpeedData
 import kotlin.math.roundToInt
 
 class NotificationHelper(private val context: Context) {
@@ -114,7 +114,7 @@ class NotificationHelper(private val context: Context) {
             builder
                 .setContentTitle("Network Speed")
                 .setContentText(
-                    "â–¼ ${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}  â–² ${
+                    "â–?${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}  â–?${
                         NetworkRepository.formatSpeedLine(speed.uploadSpeed)
                     }"
                 )

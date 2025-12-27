@@ -1,4 +1,4 @@
-package vip.mystery0.pixelpulse
+package vip.mystery0.pixel.meter
 
 import android.content.Intent
 import android.os.Bundle
@@ -38,9 +38,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import vip.mystery0.pixelpulse.data.source.NetSpeedData
-import vip.mystery0.pixelpulse.ui.MainViewModel
-import vip.mystery0.pixelpulse.ui.theme.PixelPulseTheme
+import vip.mystery0.pixel.meter.data.source.NetSpeedData
+import vip.mystery0.pixel.meter.ui.MainViewModel
+import vip.mystery0.pixel.meter.ui.theme.PixelPulseTheme
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
 
         Scaffold(
-            topBar = { TopAppBar(title = { Text("Pixel Pulse") }) }
+            topBar = { TopAppBar(title = { Text("PixelMeter") }) }
         ) { padding ->
             LazyColumn(
                 modifier = Modifier
@@ -265,14 +265,14 @@ fun SpeedDashboardCard(speed: NetSpeedData) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("Download", style = MaterialTheme.typography.bodySmall)
                     Text(
-                        "â–¼ " + formatSpeed(speed.downloadSpeed),
+                        "â–?" + formatSpeed(speed.downloadSpeed),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("Upload", style = MaterialTheme.typography.bodySmall)
                     Text(
-                        "â–² " + formatSpeed(speed.uploadSpeed),
+                        "â–?" + formatSpeed(speed.uploadSpeed),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }

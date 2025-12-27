@@ -1,4 +1,4 @@
-package vip.mystery0.pixelpulse.service
+package vip.mystery0.pixel.meter.service
 
 import android.app.NotificationManager
 import android.app.Service
@@ -12,9 +12,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
-import vip.mystery0.pixelpulse.data.repository.NetworkRepository
-import vip.mystery0.pixelpulse.data.source.NetSpeedData
-import vip.mystery0.pixelpulse.ui.overlay.OverlayWindow
+import vip.mystery0.pixel.meter.data.repository.NetworkRepository
+import vip.mystery0.pixel.meter.data.source.NetSpeedData
+import vip.mystery0.pixel.meter.ui.overlay.OverlayWindow
 
 class NetworkMonitorService : Service() {
     companion object {

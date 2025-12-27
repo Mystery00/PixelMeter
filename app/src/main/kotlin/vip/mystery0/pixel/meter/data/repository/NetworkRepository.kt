@@ -1,4 +1,4 @@
-package vip.mystery0.pixelpulse.data.repository
+package vip.mystery0.pixel.meter.data.repository
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,8 +12,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
-import vip.mystery0.pixelpulse.data.source.NetSpeedData
-import vip.mystery0.pixelpulse.data.source.impl.SpeedDataSource
+import vip.mystery0.pixel.meter.data.source.NetSpeedData
+import vip.mystery0.pixel.meter.data.source.impl.SpeedDataSource
 import java.util.Locale
 
 class NetworkRepository(

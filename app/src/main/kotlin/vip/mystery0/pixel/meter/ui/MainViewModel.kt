@@ -1,4 +1,4 @@
-package vip.mystery0.pixelpulse.ui
+package vip.mystery0.pixel.meter.ui
 
 import android.app.Application
 import android.content.Intent
@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import vip.mystery0.pixelpulse.data.repository.NetworkRepository
-import vip.mystery0.pixelpulse.service.NetworkMonitorService
+import vip.mystery0.pixel.meter.data.repository.NetworkRepository
+import vip.mystery0.pixel.meter.service.NetworkMonitorService
 
 class MainViewModel(
     private val application: Application,

@@ -1,4 +1,4 @@
-package vip.mystery0.pixelpulse.ui.overlay
+package vip.mystery0.pixel.meter.ui.overlay
 
 import android.content.Context
 import android.graphics.PixelFormat
@@ -37,9 +37,9 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import kotlinx.coroutines.launch
-import vip.mystery0.pixelpulse.data.repository.NetworkRepository
-import vip.mystery0.pixelpulse.data.source.NetSpeedData
-import vip.mystery0.pixelpulse.ui.theme.PixelPulseTheme
+import vip.mystery0.pixel.meter.data.repository.NetworkRepository
+import vip.mystery0.pixel.meter.data.source.NetSpeedData
+import vip.mystery0.pixel.meter.ui.theme.PixelPulseTheme
 import kotlin.math.roundToInt
 
 class OverlayWindow(
@@ -164,13 +164,13 @@ fun OverlayContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "â–¼ ${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}",
+                text = "â–?${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}",
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                 color = MaterialTheme.colorScheme.onSurface
             )
             Box(modifier = Modifier.padding(horizontal = 4.dp))
             Text(
-                text = "â–² ${NetworkRepository.formatSpeedLine(speed.uploadSpeed)}",
+                text = "â–?${NetworkRepository.formatSpeedLine(speed.uploadSpeed)}",
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                 color = MaterialTheme.colorScheme.onSurface
             )
