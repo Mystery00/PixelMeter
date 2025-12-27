@@ -1,11 +1,14 @@
 package vip.mystery0.pixel.meter
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -69,6 +72,17 @@ class MainActivity : ComponentActivity() {
         val isNotificationEnabled by viewModel.isNotificationEnabled.collectAsState()
         val serviceError by viewModel.serviceStartError.collectAsState()
 
+        // Permission Launcher
+        val notificationPermissionLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted ->
+                if (isGranted) {
+                    viewModel.clearError()
+                }
+            }
+        )
+
+
         val context = LocalContext.current
 
         Scaffold(
@@ -113,24 +127,16 @@ class MainActivity : ComponentActivity() {
                                     Spacer(modifier = Modifier.weight(1F))
                                     Button(onClick = {
                                         serviceError?.let { (_, action) ->
-                                            val intent = Intent(action)
-                                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                            when (action) {
-                                                Settings.ACTION_APP_NOTIFICATION_SETTINGS -> {
-                                                    intent.putExtra(
-                                                        Settings.EXTRA_APP_PACKAGE,
-                                                        context.packageName
-                                                    )
-                                                }
-
-                                                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS -> {
-                                                    intent.data =
-                                                        "package:${context.packageName}".toUri()
-                                                }
+                                            if (action == Settings.ACTION_APP_NOTIFICATION_SETTINGS) {
+                                                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                            } else {
+                                                val intent = Intent(action)
+                                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                                intent.data =
+                                                    "package:${context.packageName}".toUri()
+                                                context.startActivity(intent)
+                                                viewModel.clearError()
                                             }
-                                            context.startActivity(intent)
-                                            viewModel.clearError()
                                         }
                                     }) {
                                         Text(stringResource(R.string.action_request_fix))
@@ -240,13 +246,15 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                item {
-                    ConfigRow(
-                        title = stringResource(R.string.config_enable_live_update),
-                        subtitle = stringResource(R.string.config_enable_live_update_desc),
-                        checked = isLiveUpdateEnabled,
-                        onCheckedChange = { viewModel.setLiveUpdateEnabled(it) }
-                    )
+                if (isNotificationEnabled) {
+                    item {
+                        ConfigRow(
+                            title = stringResource(R.string.config_enable_live_update),
+                            subtitle = stringResource(R.string.config_enable_live_update_desc),
+                            checked = isLiveUpdateEnabled,
+                            onCheckedChange = { viewModel.setLiveUpdateEnabled(it) }
+                        )
+                    }
                 }
             }
         }

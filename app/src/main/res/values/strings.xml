@@ -20,7 +20,7 @@
     <string name="config_enable_notification">Enable Notification</string>
     <string name="config_enable_notification_desc">Show network speed in notification</string>
     <string name="config_enable_live_update">Enable Live Update</string>
-    <string name="config_enable_live_update_desc">Use status bar chip (Not Implemented)</string>
+    <string name="config_enable_live_update_desc">Use status bar chip</string>
 
     <string name="error_unknown">Unknown error</string>
     <string name="error_notification_permission">Notification permission required</string>
