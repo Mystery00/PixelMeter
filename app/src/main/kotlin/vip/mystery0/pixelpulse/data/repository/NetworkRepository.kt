@@ -49,10 +49,12 @@ class NetworkRepository(
         _isLiveUpdateEnabled.value = prefs.getBoolean("key_live_update", false)
         _isNotificationEnabled.value = prefs.getBoolean("key_notification_enabled", true)
         _isOverlayLocked.value = prefs.getBoolean("key_overlay_locked", false)
+        _isOverlayEnabled.value = prefs.getBoolean("key_overlay_enabled", false)
     }
 
     fun setOverlayEnabled(enable: Boolean) {
         _isOverlayEnabled.value = enable
+        prefs.edit { putBoolean("key_overlay_enabled", enable) }
     }
 
     fun setLiveUpdateEnabled(enable: Boolean) {

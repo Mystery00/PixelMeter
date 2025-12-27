@@ -45,17 +45,13 @@ class OverlayWindow(
     private val repository: NetworkRepository
 ) : LifecycleOwner, ViewModelStoreOwner,
     SavedStateRegistryOwner {
-    companion object {
-        private const val TAG = "OverlayWindow"
-    }
-
     private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private var view: View? = null
     private var params: WindowManager.LayoutParams? = null
 
-    private val lifecycleRegistry = LifecycleRegistry(this)
-    private val savedStateRegistryController = SavedStateRegistryController.create(this)
-    private val store = ViewModelStore()
+    private var lifecycleRegistry = LifecycleRegistry(this)
+    private var savedStateRegistryController = SavedStateRegistryController.create(this)
+    private var store = ViewModelStore()
 
     private var speedState by mutableStateOf(NetSpeedData(0, 0))
 
@@ -63,13 +59,15 @@ class OverlayWindow(
     override val viewModelStore: ViewModelStore get() = store
     override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
 
-    init {
-        savedStateRegistryController.performRestore(null)
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    }
-
     fun show() {
         if (view != null) return
+
+        lifecycleRegistry = LifecycleRegistry(this)
+        savedStateRegistryController = SavedStateRegistryController.create(this)
+        savedStateRegistryController.performRestore(null)
+        store = ViewModelStore()
+
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
 
@@ -128,8 +126,10 @@ class OverlayWindow(
     fun hide() {
         if (view != null) {
             windowManager.removeView(view)
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            store.clear()
             view = null
         }
     }
