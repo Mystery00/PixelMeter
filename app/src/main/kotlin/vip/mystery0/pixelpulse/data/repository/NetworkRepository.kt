@@ -29,6 +29,9 @@ class NetworkRepository(
     private val _isNotificationEnabled = MutableStateFlow(true)
     val isNotificationEnabled: StateFlow<Boolean> = _isNotificationEnabled.asStateFlow()
 
+    private val _isOverlayLocked = MutableStateFlow(false)
+    val isOverlayLocked: StateFlow<Boolean> = _isOverlayLocked.asStateFlow()
+
     private val _isMonitoring = MutableStateFlow(false)
     val isMonitoring: StateFlow<Boolean> = _isMonitoring.asStateFlow()
 
@@ -45,6 +48,7 @@ class NetworkRepository(
     init {
         _isLiveUpdateEnabled.value = prefs.getBoolean("key_live_update", false)
         _isNotificationEnabled.value = prefs.getBoolean("key_notification_enabled", true)
+        _isOverlayLocked.value = prefs.getBoolean("key_overlay_locked", false)
     }
 
     fun setOverlayEnabled(enable: Boolean) {
@@ -59,6 +63,24 @@ class NetworkRepository(
     fun setNotificationEnabled(enable: Boolean) {
         _isNotificationEnabled.value = enable
         prefs.edit { putBoolean("key_notification_enabled", enable) }
+    }
+
+    fun setOverlayLocked(locked: Boolean) {
+        _isOverlayLocked.value = locked
+        prefs.edit { putBoolean("key_overlay_locked", locked) }
+    }
+
+    fun getOverlayPosition(): Pair<Int, Int> {
+        val x = prefs.getInt("key_overlay_x", 100)
+        val y = prefs.getInt("key_overlay_y", 200)
+        return x to y
+    }
+
+    fun saveOverlayPosition(x: Int, y: Int) {
+        prefs.edit {
+            putInt("key_overlay_x", x)
+            putInt("key_overlay_y", y)
+        }
     }
 
     fun startMonitoring() {

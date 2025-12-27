@@ -62,6 +62,7 @@ class MainActivity : ComponentActivity() {
         val speed by viewModel.currentSpeed.collectAsState()
         val isServiceRunning by viewModel.isServiceRunning.collectAsState()
         val isOverlayEnabled by viewModel.isOverlayEnabled.collectAsState()
+        val isOverlayLocked by viewModel.isOverlayLocked.collectAsState()
         val isLiveUpdateEnabled by viewModel.isLiveUpdateEnabled.collectAsState()
         val isNotificationEnabled by viewModel.isNotificationEnabled.collectAsState()
         val serviceError by viewModel.serviceStartError.collectAsState()
@@ -204,6 +205,17 @@ class MainActivity : ComponentActivity() {
                         checked = isOverlayEnabled,
                         onCheckedChange = { viewModel.setOverlayEnabled(it) }
                     )
+                }
+
+                if (isOverlayEnabled) {
+                    item {
+                        ConfigRow(
+                            title = "Lock Floating Window",
+                            subtitle = "Prevent window from being moved",
+                            checked = isOverlayLocked,
+                            onCheckedChange = { viewModel.setOverlayLocked(it) }
+                        )
+                    }
                 }
 
                 item {

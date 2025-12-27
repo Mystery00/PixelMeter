@@ -4,7 +4,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.TrafficStats
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import vip.mystery0.pixelpulse.data.source.ISpeedDataSource
@@ -13,10 +12,6 @@ import vip.mystery0.pixelpulse.data.source.NetworkTrafficData
 class SpeedDataSource(
     private val connectivityManager: ConnectivityManager
 ) : ISpeedDataSource {
-    companion object {
-        private const val TAG = "SpeedDataSource"
-    }
-
     override suspend fun getTrafficData(): NetworkTrafficData? = withContext(Dispatchers.IO) {
         var totalRx = 0L
         var totalTx = 0L
@@ -55,11 +50,9 @@ class SpeedDataSource(
 
                     // TrafficStats.UNSUPPORTED 值为 -1，必须处理
                     if (rx != TrafficStats.UNSUPPORTED.toLong()) {
-                        Log.i(TAG, "getTrafficData: rx unsupported: $ifaceName")
                         totalRx += rx
                     }
                     if (tx != TrafficStats.UNSUPPORTED.toLong()) {
-                        Log.i(TAG, "getTrafficData: tx unsupported: $ifaceName")
                         totalTx += tx
                     }
                 }

@@ -3,9 +3,9 @@ package vip.mystery0.pixelpulse.ui.overlay
 import android.content.Context
 import android.graphics.PixelFormat
 import android.view.Gravity
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -14,11 +14,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,9 +38,16 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import vip.mystery0.pixelpulse.data.repository.NetworkRepository
 import vip.mystery0.pixelpulse.data.source.NetSpeedData
 import vip.mystery0.pixelpulse.ui.theme.PixelPulseTheme
+import kotlin.math.roundToInt
 
-class OverlayWindow(private val context: Context) : LifecycleOwner, ViewModelStoreOwner,
+class OverlayWindow(
+    private val context: Context,
+    private val repository: NetworkRepository
+) : LifecycleOwner, ViewModelStoreOwner,
     SavedStateRegistryOwner {
+    companion object {
+        private const val TAG = "OverlayWindow"
+    }
 
     private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private var view: View? = null
@@ -64,6 +73,8 @@ class OverlayWindow(private val context: Context) : LifecycleOwner, ViewModelSto
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
 
+        val (initialX, initialY) = repository.getOverlayPosition()
+
         params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -74,54 +85,40 @@ class OverlayWindow(private val context: Context) : LifecycleOwner, ViewModelSto
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            x = 100
-            y = 200
+            x = initialX
+            y = initialY
         }
 
-        val composeView = ComposeView(context).apply {
-            setViewTreeLifecycleOwner(this@OverlayWindow)
-            setViewTreeViewModelStoreOwner(this@OverlayWindow)
-            setViewTreeSavedStateRegistryOwner(this@OverlayWindow)
+        val composeView = ComposeView(context)
+        composeView.setViewTreeLifecycleOwner(this@OverlayWindow)
+        composeView.setViewTreeViewModelStoreOwner(this@OverlayWindow)
+        composeView.setViewTreeSavedStateRegistryOwner(this@OverlayWindow)
 
-            setContent {
-                PixelPulseTheme {
-                    OverlayContent(speedState)
-                }
+        composeView.setContent {
+            PixelPulseTheme {
+                val isLocked by repository.isOverlayLocked.collectAsState()
+                OverlayContent(
+                    speed = speedState,
+                    onDrag = { x, y ->
+                        if (!isLocked) {
+                            params?.let { p ->
+                                p.x += x.roundToInt()
+                                p.y += y.roundToInt()
+                                windowManager.updateViewLayout(composeView, p)
+                            }
+                        }
+                    },
+                    onDragEnd = {
+                        params?.let { p ->
+                            repository.saveOverlayPosition(p.x, p.y)
+                        }
+                    }
+                )
             }
         }
 
-        setupDragListener(composeView)
         windowManager.addView(composeView, params)
         view = composeView
-    }
-
-    private fun setupDragListener(view: View) {
-        view.setOnTouchListener(object : View.OnTouchListener {
-            private var initialX = 0
-            private var initialY = 0
-            private var initialTouchX = 0f
-            private var initialTouchY = 0f
-
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        initialX = params!!.x
-                        initialY = params!!.y
-                        initialTouchX = event.rawX
-                        initialTouchY = event.rawY
-                        return true
-                    }
-
-                    MotionEvent.ACTION_MOVE -> {
-                        params!!.x = initialX + (event.rawX - initialTouchX).toInt()
-                        params!!.y = initialY + (event.rawY - initialTouchY).toInt()
-                        windowManager.updateViewLayout(view, params)
-                        return true
-                    }
-                }
-                return false
-            }
-        })
     }
 
     fun update(speed: NetSpeedData) {
@@ -130,20 +127,32 @@ class OverlayWindow(private val context: Context) : LifecycleOwner, ViewModelSto
 
     fun hide() {
         if (view != null) {
+            windowManager.removeView(view)
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            windowManager.removeView(view)
             view = null
         }
     }
 }
 
 @Composable
-fun OverlayContent(speed: NetSpeedData) {
+fun OverlayContent(
+    speed: NetSpeedData,
+    onDrag: (Float, Float) -> Unit,
+    onDragEnd: () -> Unit
+) {
     Surface(
         shape = RoundedCornerShape(8.dp),
         color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
-        shadowElevation = 4.dp
+        modifier = Modifier.pointerInput(Unit) {
+            detectDragGestures(
+                onDrag = { change, dragAmount ->
+                    change.consume()
+                    onDrag(dragAmount.x, dragAmount.y)
+                },
+                onDragEnd = onDragEnd
+            )
+        }
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),

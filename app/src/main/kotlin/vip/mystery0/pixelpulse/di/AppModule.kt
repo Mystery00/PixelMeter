@@ -21,5 +21,5 @@ val appModule = module {
     single { NetworkRepository(get(), get()) }
 
     factory { NotificationHelper(androidContext()) }
-    factory { OverlayWindow(androidContext()) }
+    factory { OverlayWindow(androidContext(), get()) }
 }
