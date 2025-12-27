@@ -63,6 +63,7 @@ class MainActivity : ComponentActivity() {
         val isServiceRunning by viewModel.isServiceRunning.collectAsState()
         val isOverlayEnabled by viewModel.isOverlayEnabled.collectAsState()
         val isLiveUpdateEnabled by viewModel.isLiveUpdateEnabled.collectAsState()
+        val isNotificationEnabled by viewModel.isNotificationEnabled.collectAsState()
         val serviceError by viewModel.serviceStartError.collectAsState()
 
         val context = LocalContext.current
@@ -207,8 +208,17 @@ class MainActivity : ComponentActivity() {
 
                 item {
                     ConfigRow(
+                        title = "Enable Notification",
+                        subtitle = "Show network speed in notification",
+                        checked = isNotificationEnabled,
+                        onCheckedChange = { viewModel.setNotificationEnabled(it) }
+                    )
+                }
+
+                item {
+                    ConfigRow(
                         title = "Enable Live Update",
-                        subtitle = "Use status bar chip (Android 15+)",
+                        subtitle = "Use status bar chip",
                         checked = isLiveUpdateEnabled,
                         onCheckedChange = { viewModel.setLiveUpdateEnabled(it) }
                     )

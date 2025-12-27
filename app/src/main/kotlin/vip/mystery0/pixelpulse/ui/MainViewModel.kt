@@ -28,6 +28,7 @@ class MainViewModel(
     val isOverlayEnabled = repository.isOverlayEnabled
 
     val isLiveUpdateEnabled = repository.isLiveUpdateEnabled
+    val isNotificationEnabled = repository.isNotificationEnabled
 
     val isServiceRunning = repository.isMonitoring
 
@@ -83,5 +84,9 @@ class MainViewModel(
 
     fun setLiveUpdateEnabled(enable: Boolean) {
         repository.setLiveUpdateEnabled(enable)
+    }
+
+    fun setNotificationEnabled(enable: Boolean) {
+        repository.setNotificationEnabled(enable)
     }
 }

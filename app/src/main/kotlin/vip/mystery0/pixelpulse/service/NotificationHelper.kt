@@ -11,9 +11,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
-import android.graphics.drawable.Icon
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.drawable.IconCompat
 import vip.mystery0.pixelpulse.MainActivity
 import vip.mystery0.pixelpulse.R
 import vip.mystery0.pixelpulse.data.repository.NetworkRepository
@@ -74,7 +74,11 @@ class NotificationHelper(private val context: Context) {
         textSize = size * 0.35f // Unit text
     }
 
-    fun buildNotification(speed: NetSpeedData, isLiveUpdate: Boolean): Notification {
+    fun buildNotification(
+        speed: NetSpeedData,
+        isLiveUpdate: Boolean,
+        isNotificationEnabled: Boolean
+    ): Notification {
         val intent = Intent().apply {
             setClassName(context, MainActivity::class.java.name)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -86,12 +90,28 @@ class NotificationHelper(private val context: Context) {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val notification: Notification
-        if (isLiveUpdate) {
-            // Use static icon (Notification icon shouldn't show speed in this mode)
-            val statusText = NetworkRepository.formatSpeedTextForLiveUpdate(speed.totalSpeed)
+        // Common Builder setup
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setContentIntent(pendingIntent)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
 
-            notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        if (!isNotificationEnabled) {
+            // Notification Disabled (Static Mode)
+            return builder
+                .setContentTitle("Network Speed")
+                .setContentText("Monitoring in background...")
+                .setSmallIcon(R.drawable.ic_speed)
+                .build()
+        }
+
+        // Notification Enabled (Dynamic Mode)
+        if (isLiveUpdate) {
+            // Live Update Mode
+            val statusText = NetworkRepository.formatSpeedTextForLiveUpdate(speed.totalSpeed)
+            builder
                 .setContentTitle("Network Speed")
                 .setContentText(
                     "▼ ${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}  ▲ ${
@@ -99,15 +119,12 @@ class NotificationHelper(private val context: Context) {
                     }"
                 )
                 .setSmallIcon(R.drawable.ic_speed)
-                .setShortCriticalText(statusText)
+                .setShortCriticalText(statusText) // No version check needed as minSdk = 36
                 .setRequestPromotedOngoing(true)
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .setContentIntent(pendingIntent)
-                .build()
         } else {
             // Standard Mode
             val (valueStr, unitStr) = NetworkRepository.formatSpeedText(speed.totalSpeed)
+
             // Draw Bitmap with speed
             bitmap.eraseColor(Color.TRANSPARENT)
             val cx = size / 2f
@@ -117,9 +134,9 @@ class NotificationHelper(private val context: Context) {
             canvas.drawText(valueStr, cx, cyValue, textPaint)
             canvas.drawText(unitStr, cx, cyUnit, unitPaint)
 
-            val smallIcon = Icon.createWithBitmap(bitmap)
+            val smallIcon = IconCompat.createWithBitmap(bitmap)
 
-            notification = Notification.Builder(context, CHANNEL_ID)
+            builder
                 .setContentTitle("Network Speed")
                 .setContentText(
                     "RX ${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}  TX ${
@@ -127,13 +144,8 @@ class NotificationHelper(private val context: Context) {
                     }"
                 )
                 .setSmallIcon(smallIcon)
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .setContentIntent(pendingIntent)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
-                .build()
         }
-        return notification
+
+        return builder.build()
     }
 }

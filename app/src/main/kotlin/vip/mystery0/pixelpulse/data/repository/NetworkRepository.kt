@@ -26,6 +26,9 @@ class NetworkRepository(
     private val _isLiveUpdateEnabled = MutableStateFlow(false)
     val isLiveUpdateEnabled: StateFlow<Boolean> = _isLiveUpdateEnabled.asStateFlow()
 
+    private val _isNotificationEnabled = MutableStateFlow(true)
+    val isNotificationEnabled: StateFlow<Boolean> = _isNotificationEnabled.asStateFlow()
+
     private val _isMonitoring = MutableStateFlow(false)
     val isMonitoring: StateFlow<Boolean> = _isMonitoring.asStateFlow()
 
@@ -41,6 +44,7 @@ class NetworkRepository(
 
     init {
         _isLiveUpdateEnabled.value = prefs.getBoolean("key_live_update", false)
+        _isNotificationEnabled.value = prefs.getBoolean("key_notification_enabled", true)
     }
 
     fun setOverlayEnabled(enable: Boolean) {
@@ -50,6 +54,11 @@ class NetworkRepository(
     fun setLiveUpdateEnabled(enable: Boolean) {
         _isLiveUpdateEnabled.value = enable
         prefs.edit { putBoolean("key_live_update", enable) }
+    }
+
+    fun setNotificationEnabled(enable: Boolean) {
+        _isNotificationEnabled.value = enable
+        prefs.edit { putBoolean("key_notification_enabled", enable) }
     }
 
     fun startMonitoring() {
