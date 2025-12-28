@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import vip.mystery0.pixel.meter.data.source.NetSpeedData
 import vip.mystery0.pixel.meter.data.source.impl.SpeedDataSource
@@ -108,39 +109,40 @@ class NetworkRepository(
 
         monitoringJob = scope.launch {
             Log.i(TAG, "startMonitoring")
+            val interval = 1500L
+
             while (isActive) {
                 val startTime = System.currentTimeMillis()
-                val source = dataSource
-
-                val interval = 1000L
 
                 // Get Traffic Data
-                val trafficData = source.getTrafficData()
+                val trafficData = dataSource.getTrafficData()
 
                 val currentTime = System.currentTimeMillis()
                 val totalRxBytes = trafficData.rxBytes
                 val totalTxBytes = trafficData.txBytes
 
-                if (lastTime != 0L) {
-                    val timeDelta = currentTime - lastTime
-                    val rxDelta = totalRxBytes - lastTotalRxBytes
-                    val txDelta = totalTxBytes - lastTotalTxBytes
+                withContext(Dispatchers.Default) {
+                    if (lastTime != 0L) {
+                        val timeDelta = currentTime - lastTime
+                        val rxDelta = totalRxBytes - lastTotalRxBytes
+                        val txDelta = totalTxBytes - lastTotalTxBytes
 
-                    if (timeDelta > 0) {
-                        // Calculate speed
-                        val downloadSpeed = ((rxDelta * 1000) / timeDelta).coerceAtLeast(0)
-                        val uploadSpeed = ((txDelta * 1000) / timeDelta).coerceAtLeast(0)
+                        if (timeDelta > 0) {
+                            // Calculate speed
+                            val downloadSpeed = ((rxDelta * 1000) / timeDelta).coerceAtLeast(0)
+                            val uploadSpeed = ((txDelta * 1000) / timeDelta).coerceAtLeast(0)
 
-                        _netSpeed.value = NetSpeedData(
-                            downloadSpeed.coerceAtLeast(0),
-                            uploadSpeed.coerceAtLeast(0)
-                        )
+                            _netSpeed.value = NetSpeedData(
+                                downloadSpeed.coerceAtLeast(0),
+                                uploadSpeed.coerceAtLeast(0)
+                            )
+                        }
                     }
-                }
 
-                lastTotalRxBytes = totalRxBytes
-                lastTotalTxBytes = totalTxBytes
-                lastTime = currentTime
+                    lastTotalRxBytes = totalRxBytes
+                    lastTotalTxBytes = totalTxBytes
+                    lastTime = currentTime
+                }
 
                 // Delay to achieve the desired interval
                 val delayMills = interval - (System.currentTimeMillis() - startTime)

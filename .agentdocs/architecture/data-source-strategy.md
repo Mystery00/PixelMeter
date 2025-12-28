@@ -6,40 +6,56 @@ Pixel Meter 采用**单一数据源模式**，利用 Android 原生 `TrafficStat
 通过指定接口名称 (`wlan0`) 和移动网络接口，我们可以精确统计流量并计算网速，无需 Root 权限，也无需复杂的
 Shizuku IPC。
 
-## 核心策略: TrafficStats 差值计算
+## 核心策略: NetworkCallback 缓存 + TrafficStats
 
 ### 原理
 
-Android 的 `TrafficStats` 提供了直接读取内核网络计数器的能力。
-为了避免 VPN 造成的流量双重统计（虚拟接口 + 物理接口），我们**显式只读取物理接口**的数据：
+为了进一步优化性能并消除多网卡场景下的时间偏差 (Time Skew)，我们采用了**事件驱动的缓存策略**。
 
-1. **遍历网络**: 使用 `ConnectivityManager.allNetworks` 获取当前活动网络。
-2. **能力过滤**: 检查 `NetworkCapabilities`。
-    - **排除**: `TRANSPORT_VPN` (核心步骤，避免双重统计)。
-    - **包含**: `TRANSPORT_WIFI`, `TRANSPORT_CELLULAR`, `TRANSPORT_ETHERNET`。
-3. **接口读取**: 获取 `LinkProperties` 中的接口名 (如 `wlan0`, `rmnet_data0`)。
-4. **统计汇总**: 调用 `TrafficStats.getRx/TxBytes(iface)` 累加数据。
+1. **接口缓存**: 在 `SpeedDataSource` 初始化时注册 `ConnectivityManager.NetworkCallback`。
+2. **实时更新**:
+   - **onAvailable / onCapabilitiesChanged**: 检查网络类型。
+      - **排除**: `TRANSPORT_VPN` (避免双重统计)。
+      - **包含**: `TRANSPORT_WIFI`, `TRANSPORT_CELLULAR`, `TRANSPORT_ETHERNET`。
+      - 若符合条件，将 `<Network, InterfaceName>` 存入 `ConcurrentHashMap`。
+   - **onLost**: 从缓存中移除对应的 Network。
+3. **极速读取**:
+   - `getTrafficData()` 不再进行任何 IPC 调用查询 `ConnectivityManager`。
+   - 直接遍历缓存中的接口名称列表 (`wlan0`, `rmnet_data0` 等)。
+   - 使用协程并行调用 `TrafficStats.getRx/TxBytes(iface)`。
+
+### 代码结构
 
 ```kotlin
-// 伪代码示例
-connectivityManager.allNetworks.forEach { network ->
-    val caps = connectivityManager.getNetworkCapabilities(network) ?: return@forEach
-    if (caps.hasTransport(TRANSPORT_VPN)) return@forEach // 忽略 VPN
+// 伪代码
+private val validInterfaces = ConcurrentHashMap<Network, String>()
 
-    if (caps.hasTransport(TRANSPORT_WIFI) || caps.hasTransport(TRANSPORT_CELLULAR)) {
-        val iface = connectivityManager.getLinkProperties(network)?.interfaceName
-        totalRx += TrafficStats.getRxBytes(iface)
-    }
+// 初始化注册回调
+init {
+    connectivityManager.registerNetworkCallback(request, object : NetworkCallback() {
+        override fun onCapabilitiesChanged(network, caps) {
+            if (isPhysical(caps) && !isVpn(caps)) {
+                validInterfaces[network] = linkProps.interfaceName
+            }
+        }
+        override fun onLost(network) {
+            validInterfaces.remove(network)
+        }
+    })
 }
+
+// 瞬时读取 (无 IPC 开销)
+override suspend fun getTrafficData() = validInterfaces.values.map { iface ->
+    async { TrafficStats.getRxBytes(iface) }
+}.awaitAll().sum()
 ```
 
 ### 优势
 
-1. **实时性**: 直接读取 `/proc/net/xt_qtaguid/stats` 或 `/sys/class/net/.../statistics` (由
-   Framework 封装)，无缓存桶延迟。
-2. **准确性**: 物理接口流量真实反映了网卡吞吐量。
-3. **简单性**: 无需处理 `NetworkStatsManager` 的 Session、Bucket、SubscriberId 权限等复杂逻辑。
-4. **无需 Root/ADB**: 普通应用权限即可运行。
+1. **零 IPC 延迟**: 采样循环中移除了耗时的 `getNetworkCapabilities` 和 `getLinkProperties` 跨进程调用。
+2. **高并发精度**: 结合协程并行读取，采样窗口被压缩到极致，消除了“网卡A读在上一秒，网卡B读在下一秒”的交叉统计误差。
+3. **系统减负**: 减少了对 SystemServer 的频繁轮询压力。
+4. **无需 Root/ADB**: 保持了原有方案的权限优势。
 
 ## 历史演进 (已废弃方案)
 
