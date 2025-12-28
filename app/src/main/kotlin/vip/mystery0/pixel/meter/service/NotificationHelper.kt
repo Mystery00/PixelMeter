@@ -78,7 +78,11 @@ class NotificationHelper(private val context: Context) {
     fun buildNotification(
         speed: NetSpeedData,
         isLiveUpdate: Boolean,
-        isNotificationEnabled: Boolean
+        isNotificationEnabled: Boolean,
+        textUp: String,
+        textDown: String,
+        upFirst: Boolean,
+        displayMode: Int
     ): Notification {
         val intent = Intent().apply {
             setClassName(context, MainActivity::class.java.name)
@@ -112,13 +116,18 @@ class NotificationHelper(private val context: Context) {
         if (isLiveUpdate) {
             // Live Update Mode
             val statusText = NetworkRepository.formatSpeedTextForLiveUpdate(speed.totalSpeed)
+            val upText = "$textUp${NetworkRepository.formatSpeedLine(speed.uploadSpeed)}"
+            val downText = "$textDown${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}"
+
+            val contentText = when (displayMode) {
+                1 -> upText // Up Only
+                2 -> downText // Down Only
+                else -> if (upFirst) "$upText  $downText" else "$downText  $upText" // Total (Both)
+            }
+
             builder
                 .setContentTitle(context.getString(R.string.notification_content_title))
-                .setContentText(
-                    "▼ ${NetworkRepository.formatSpeedLine(speed.downloadSpeed)} ▲ ${
-                        NetworkRepository.formatSpeedLine(speed.uploadSpeed)
-                    }"
-                )
+                .setContentText(contentText)
                 .setSmallIcon(R.drawable.ic_speed)
                 .setShortCriticalText(statusText)
                 .setRequestPromotedOngoing(true)
@@ -137,13 +146,18 @@ class NotificationHelper(private val context: Context) {
 
             val smallIcon = IconCompat.createWithBitmap(bitmap)
 
+            val upText = "$textUp${NetworkRepository.formatSpeedLine(speed.uploadSpeed)}"
+            val downText = "$textDown${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}"
+
+            val contentText = when (displayMode) {
+                1 -> upText // Up Only
+                2 -> downText // Down Only
+                else -> if (upFirst) "$upText  $downText" else "$downText  $upText" // Total (Both)
+            }
+
             builder
                 .setContentTitle(context.getString(R.string.notification_content_title))
-                .setContentText(
-                    "RX ${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}  TX ${
-                        NetworkRepository.formatSpeedLine(speed.uploadSpeed)
-                    }"
-                )
+                .setContentText(contentText)
                 .setSmallIcon(smallIcon)
         }
 

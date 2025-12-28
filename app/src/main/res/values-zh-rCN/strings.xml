@@ -25,6 +25,8 @@
     <string name="action_speed_test">网络测速</string>
     <string name="desc_speed_test">使用 Cloudflare 进行测速</string>
 
+    <string name="title_settings">设置</string>
+
     <string name="error_unknown">未知错误</string>
     <string name="error_notification_permission">启用通知需要授予“通知权限”</string>
     <string name="error_overlay_permission">启用悬浮窗需要“显示在其他应用上层”的权限</string>

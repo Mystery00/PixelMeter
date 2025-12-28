@@ -27,9 +27,6 @@ class MainViewModel(
     val currentSpeed = repository.netSpeed
 
     val isOverlayEnabled = repository.isOverlayEnabled
-    val isOverlayLocked = repository.isOverlayLocked
-
-    val isLiveUpdateEnabled = repository.isLiveUpdateEnabled
     val isNotificationEnabled = repository.isNotificationEnabled
 
     val isServiceRunning = repository.isMonitoring
@@ -95,14 +92,6 @@ class MainViewModel(
             }
         }
         repository.setOverlayEnabled(enable)
-    }
-
-    fun setOverlayLocked(locked: Boolean) {
-        repository.setOverlayLocked(locked)
-    }
-
-    fun setLiveUpdateEnabled(enable: Boolean) {
-        repository.setLiveUpdateEnabled(enable)
     }
 
     fun setNotificationEnabled(enable: Boolean) {

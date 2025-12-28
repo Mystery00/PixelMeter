@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.NetworkCheck
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -43,12 +44,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import vip.mystery0.pixel.meter.data.source.NetSpeedData
 import vip.mystery0.pixel.meter.ui.MainViewModel
+import vip.mystery0.pixel.meter.ui.settings.SettingsActivity
 import vip.mystery0.pixel.meter.ui.theme.PixelPulseTheme
 import java.util.Locale
 
@@ -78,8 +79,6 @@ class MainActivity : ComponentActivity() {
         val speed by viewModel.currentSpeed.collectAsState()
         val isServiceRunning by viewModel.isServiceRunning.collectAsState()
         val isOverlayEnabled by viewModel.isOverlayEnabled.collectAsState()
-        val isOverlayLocked by viewModel.isOverlayLocked.collectAsState()
-        val isLiveUpdateEnabled by viewModel.isLiveUpdateEnabled.collectAsState()
         val isNotificationEnabled by viewModel.isNotificationEnabled.collectAsState()
         val serviceError by viewModel.serviceStartError.collectAsState()
 
@@ -102,15 +101,12 @@ class MainActivity : ComponentActivity() {
                     title = { Text(stringResource(R.string.app_name)) },
                     actions = {
                         IconButton(onClick = {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                "https://github.com/Mystery00/PixelMeter".toUri()
-                            )
+                            val intent = Intent(context, SettingsActivity::class.java)
                             context.startActivity(intent)
                         }) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_github),
-                                contentDescription = "GitHub"
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = "Settings"
                             )
                         }
                     }
@@ -265,17 +261,6 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                if (isOverlayEnabled) {
-                    item {
-                        ConfigRow(
-                            title = stringResource(R.string.config_lock_overlay),
-                            subtitle = stringResource(R.string.config_lock_overlay_desc),
-                            checked = isOverlayLocked,
-                            onCheckedChange = { viewModel.setOverlayLocked(it) }
-                        )
-                    }
-                }
-
                 item {
                     ConfigRow(
                         title = stringResource(R.string.config_enable_notification),
@@ -283,19 +268,6 @@ class MainActivity : ComponentActivity() {
                         checked = isNotificationEnabled,
                         onCheckedChange = { viewModel.setNotificationEnabled(it) }
                     )
-                }
-
-                if (isNotificationEnabled) {
-                    item {
-                        val isSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA
-                        ConfigRow(
-                            title = stringResource(R.string.config_enable_live_update),
-                            subtitle = stringResource(R.string.config_enable_live_update_desc),
-                            checked = isLiveUpdateEnabled && isSupported,
-                            onCheckedChange = { viewModel.setLiveUpdateEnabled(it) },
-                            enabled = isSupported
-                        )
-                    }
                 }
 
                 item {

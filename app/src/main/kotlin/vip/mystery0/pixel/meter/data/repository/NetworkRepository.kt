@@ -40,6 +40,39 @@ class NetworkRepository(
     private val _netSpeed = MutableStateFlow(NetSpeedData(0, 0))
     val netSpeed: StateFlow<NetSpeedData> = _netSpeed.asStateFlow()
 
+    private val _samplingInterval = MutableStateFlow(1500L)
+    val samplingInterval: StateFlow<Long> = _samplingInterval.asStateFlow()
+
+    private val _overlayBgColor = MutableStateFlow(0xCC000000.toInt())
+    val overlayBgColor: StateFlow<Int> = _overlayBgColor.asStateFlow()
+
+    private val _overlayCornerRadius = MutableStateFlow(8)
+    val overlayCornerRadius: StateFlow<Int> = _overlayCornerRadius.asStateFlow()
+
+    private val _overlayTextSize = MutableStateFlow(10f)
+    val overlayTextSize: StateFlow<Float> = _overlayTextSize.asStateFlow()
+
+    private val _overlayTextUp = MutableStateFlow("▲ ")
+    val overlayTextUp: StateFlow<String> = _overlayTextUp.asStateFlow()
+
+    private val _overlayTextDown = MutableStateFlow("▼ ")
+    val overlayTextDown: StateFlow<String> = _overlayTextDown.asStateFlow()
+
+    private val _overlayOrderUpFirst = MutableStateFlow(true)
+    val overlayOrderUpFirst: StateFlow<Boolean> = _overlayOrderUpFirst.asStateFlow()
+
+    private val _notificationTextUp = MutableStateFlow("▲ ")
+    val notificationTextUp: StateFlow<String> = _notificationTextUp.asStateFlow()
+
+    private val _notificationTextDown = MutableStateFlow("▼ ")
+    val notificationTextDown: StateFlow<String> = _notificationTextDown.asStateFlow()
+
+    private val _notificationOrderUpFirst = MutableStateFlow(true)
+    val notificationOrderUpFirst: StateFlow<Boolean> = _notificationOrderUpFirst.asStateFlow()
+
+    private val _notificationDisplayMode = MutableStateFlow(0)
+    val notificationDisplayMode: StateFlow<Int> = _notificationDisplayMode.asStateFlow()
+
     private var monitoringJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.Default)
 
@@ -53,6 +86,17 @@ class NetworkRepository(
             _isNotificationEnabled.value = dataStoreRepository.isNotificationEnabled.first()
             _isOverlayLocked.value = dataStoreRepository.isOverlayLocked.first()
             _isOverlayEnabled.value = dataStoreRepository.isOverlayEnabled.first()
+            _samplingInterval.value = dataStoreRepository.samplingInterval.first()
+            _overlayBgColor.value = dataStoreRepository.overlayBgColor.first()
+            _overlayCornerRadius.value = dataStoreRepository.overlayCornerRadius.first()
+            _overlayTextSize.value = dataStoreRepository.overlayTextSize.first()
+            _overlayTextUp.value = dataStoreRepository.overlayTextUp.first()
+            _overlayTextDown.value = dataStoreRepository.overlayTextDown.first()
+            _overlayOrderUpFirst.value = dataStoreRepository.overlayOrderUpFirst.first()
+            _notificationTextUp.value = dataStoreRepository.notificationTextUp.first()
+            _notificationTextDown.value = dataStoreRepository.notificationTextDown.first()
+            _notificationOrderUpFirst.value = dataStoreRepository.notificationOrderUpFirst.first()
+            _notificationDisplayMode.value = dataStoreRepository.notificationDisplayMode.first()
         }
         scope.launch {
             dataStoreRepository.isLiveUpdateEnabled.collect { _isLiveUpdateEnabled.value = it }
@@ -65,6 +109,43 @@ class NetworkRepository(
         }
         scope.launch {
             dataStoreRepository.isOverlayEnabled.collect { _isOverlayEnabled.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.samplingInterval.collect { _samplingInterval.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.overlayBgColor.collect { _overlayBgColor.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.overlayCornerRadius.collect { _overlayCornerRadius.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.overlayTextSize.collect { _overlayTextSize.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.overlayTextUp.collect { _overlayTextUp.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.overlayTextDown.collect { _overlayTextDown.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.overlayOrderUpFirst.collect { _overlayOrderUpFirst.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.notificationTextUp.collect { _notificationTextUp.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.notificationTextDown.collect { _notificationTextDown.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.notificationOrderUpFirst.collect {
+                _notificationOrderUpFirst.value = it
+            }
+        }
+        scope.launch {
+            dataStoreRepository.notificationDisplayMode.collect {
+                _notificationDisplayMode.value = it
+            }
         }
     }
 
@@ -82,6 +163,50 @@ class NetworkRepository(
 
     fun setOverlayLocked(locked: Boolean) {
         scope.launch { dataStoreRepository.setOverlayLocked(locked) }
+    }
+
+    fun setSamplingInterval(interval: Long) {
+        scope.launch { dataStoreRepository.setSamplingInterval(interval) }
+    }
+
+    fun setOverlayBgColor(color: Int) {
+        scope.launch { dataStoreRepository.setOverlayBgColor(color) }
+    }
+
+    fun setOverlayCornerRadius(radius: Int) {
+        scope.launch { dataStoreRepository.setOverlayCornerRadius(radius) }
+    }
+
+    fun setOverlayTextSize(size: Float) {
+        scope.launch { dataStoreRepository.setOverlayTextSize(size) }
+    }
+
+    fun setOverlayTextUp(text: String) {
+        scope.launch { dataStoreRepository.setOverlayTextUp(text) }
+    }
+
+    fun setOverlayTextDown(text: String) {
+        scope.launch { dataStoreRepository.setOverlayTextDown(text) }
+    }
+
+    fun setOverlayOrderUpFirst(upFirst: Boolean) {
+        scope.launch { dataStoreRepository.setOverlayOrderUpFirst(upFirst) }
+    }
+
+    fun setNotificationTextUp(text: String) {
+        scope.launch { dataStoreRepository.setNotificationTextUp(text) }
+    }
+
+    fun setNotificationTextDown(text: String) {
+        scope.launch { dataStoreRepository.setNotificationTextDown(text) }
+    }
+
+    fun setNotificationOrderUpFirst(upFirst: Boolean) {
+        scope.launch { dataStoreRepository.setNotificationOrderUpFirst(upFirst) }
+    }
+
+    fun setNotificationDisplayMode(mode: Int) {
+        scope.launch { dataStoreRepository.setNotificationDisplayMode(mode) }
     }
 
     suspend fun getOverlayPosition(): Pair<Int, Int> {
@@ -109,9 +234,9 @@ class NetworkRepository(
 
         monitoringJob = scope.launch {
             Log.i(TAG, "startMonitoring")
-            val interval = 1500L
 
             while (isActive) {
+                val interval = _samplingInterval.value
                 val startTime = System.currentTimeMillis()
 
                 // Get Traffic Data

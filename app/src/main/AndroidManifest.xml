@@ -28,6 +28,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_settings"
+            android:theme="@style/Theme.PixelMeter" />
+
         <service
             android:name=".service.NetworkMonitorService"
             android:enabled="true"

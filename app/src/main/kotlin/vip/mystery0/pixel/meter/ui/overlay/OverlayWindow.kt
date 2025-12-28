@@ -98,8 +98,21 @@ class OverlayWindow(
             composeView.setContent {
                 PixelPulseTheme {
                     val isLocked by repository.isOverlayLocked.collectAsState()
+                    val bgColor by repository.overlayBgColor.collectAsState()
+                    val cornerRadius by repository.overlayCornerRadius.collectAsState()
+                    val textSize by repository.overlayTextSize.collectAsState()
+                    val textUp by repository.overlayTextUp.collectAsState()
+                    val textDown by repository.overlayTextDown.collectAsState()
+                    val upFirst by repository.overlayOrderUpFirst.collectAsState()
+
                     OverlayContent(
                         speed = speedState,
+                        bgColor = bgColor,
+                        cornerRadius = cornerRadius,
+                        textSize = textSize,
+                        textUp = textUp,
+                        textDown = textDown,
+                        upFirst = upFirst,
                         onDrag = { x, y ->
                             if (!isLocked) {
                                 params?.let { p ->
@@ -143,12 +156,18 @@ class OverlayWindow(
 @Composable
 fun OverlayContent(
     speed: NetSpeedData,
+    bgColor: Int,
+    cornerRadius: Int,
+    textSize: Float,
+    textUp: String,
+    textDown: String,
+    upFirst: Boolean,
     onDrag: (Float, Float) -> Unit,
     onDragEnd: () -> Unit
 ) {
     Surface(
-        shape = RoundedCornerShape(8.dp),
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+        shape = RoundedCornerShape(cornerRadius.dp),
+        color = androidx.compose.ui.graphics.Color(bgColor),
         modifier = Modifier.pointerInput(Unit) {
             detectDragGestures(
                 onDrag = { change, dragAmount ->
@@ -159,20 +178,23 @@ fun OverlayContent(
             )
         }
     ) {
+        val upText = "$textUp${NetworkRepository.formatSpeedLine(speed.uploadSpeed)}"
+        val downText = "$textDown${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}"
+
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "▼ ${NetworkRepository.formatSpeedLine(speed.downloadSpeed)}",
-                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                color = MaterialTheme.colorScheme.onSurface
+                text = if (upFirst) upText else downText,
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
+                color = androidx.compose.ui.graphics.Color.White // Always white for contrast on dark/transparent overlay
             )
             Box(modifier = Modifier.padding(horizontal = 4.dp))
             Text(
-                text = "▲ ${NetworkRepository.formatSpeedLine(speed.uploadSpeed)}",
-                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                color = MaterialTheme.colorScheme.onSurface
+                text = if (upFirst) downText else upText,
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
+                color = androidx.compose.ui.graphics.Color.White
             )
         }
     }

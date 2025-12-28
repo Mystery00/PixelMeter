@@ -46,7 +46,12 @@ class NetworkMonitorService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val initialNotif = notificationHelper.buildNotification(NetSpeedData(0, 0), false, true)
+        val initialNotif = notificationHelper.buildNotification(
+            NetSpeedData(0, 0),
+            false,
+            true,
+            "TX ", "RX ", true, 0
+        )
 
         try {
             startForeground(
@@ -89,8 +94,16 @@ class NetworkMonitorService : Service() {
                 // Notification logic
                 val isLiveUpdate = repository.isLiveUpdateEnabled.value
                 val isNotificationEnabled = repository.isNotificationEnabled.value
+                val textUp = repository.notificationTextUp.value
+                val textDown = repository.notificationTextDown.value
+                val upFirst = repository.notificationOrderUpFirst.value
+                val displayMode = repository.notificationDisplayMode.value
+
                 val notification =
-                    notificationHelper.buildNotification(speed, isLiveUpdate, isNotificationEnabled)
+                    notificationHelper.buildNotification(
+                        speed, isLiveUpdate, isNotificationEnabled,
+                        textUp, textDown, upFirst, displayMode
+                    )
                 notificationManager.notify(NotificationHelper.NOTIFICATION_ID, notification)
             }
         }
