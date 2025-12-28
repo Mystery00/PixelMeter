@@ -1,6 +1,6 @@
-# Pixel Pulse 文档索引
+# Pixel Meter 文档索引
 
-欢迎查阅 Pixel Pulse 项目文档。本文档体系遵循 `GEMINI.md` 规范。
+欢迎查阅 Pixel Meter 项目文档。本文档体系遵循 `GEMINI.md` 规范。
 
 ## 📁 目录结构
 

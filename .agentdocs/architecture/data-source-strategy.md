@@ -2,7 +2,7 @@
 
 ## 概述
 
-Pixel Pulse 采用**单一数据源模式**，利用 Android 原生 `TrafficStats` API 获取实时网速。
+Pixel Meter 采用**单一数据源模式**，利用 Android 原生 `TrafficStats` API 获取实时网速。
 通过指定接口名称 (`wlan0`) 和移动网络接口，我们可以精确统计流量并计算网速，无需 Root 权限，也无需复杂的
 Shizuku IPC。
 
@@ -56,5 +56,5 @@ connectivityManager.allNetworks.forEach { network ->
 
 ## 兼容性
 
-* **MinSDK**: 36 (Android 16)。
+* **MinSDK**: 31 (Android 12)。
 * **Device**: Google Pixel 系列 (主要目标)，以及其他遵循标准接口命名的 Android 设备。

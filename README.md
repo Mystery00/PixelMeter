@@ -49,7 +49,7 @@ interfaces (Wi-Fi, Cellular, Ethernet) to provide accurate real-time speed stati
 ## Requirements
 
 - **Device**: Google Pixel series (recommended) or devices running native Android (AOSP).
-- **Android Version**: Android 16 (API Level 36) or higher.
+- **Android Version**: Android 12 (API Level 31) or higher.
 - **Permissions**: Notification (for the status bar icon) and Overlay (for the floating window).
 
 ## Architecture

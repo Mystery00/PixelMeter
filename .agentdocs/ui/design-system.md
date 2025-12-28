@@ -1,6 +1,6 @@
 # 设计系统 (Design System)
 
-Pixel Pulse 严格遵循 Modern Android Development (MAD) 指南，全面采用 Jetpack Compose 构建 UI。
+Pixel Meter 严格遵循 Modern Android Development (MAD) 指南，全面采用 Jetpack Compose 构建 UI。
 
 ## 1. 主题与配色 (Theming)
 

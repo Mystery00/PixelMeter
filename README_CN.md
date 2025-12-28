@@ -44,7 +44,7 @@ Pixel Meter 是一款专为 Google Pixel 和原生 Android 设备设计的网速
 ## 系统要求
 
 - **设备**: 推荐 Google Pixel 系列，或运行原生 Android (AOSP) 的设备。
-- **Android 版本**: Android 16 (API Level 36) 及以上。
+- **Android 版本**: Android 12 (API Level 31) 及以上。
 - **权限**: 通知权限（用于状态栏图标）和悬浮窗权限（用于桌面悬浮窗）。
 
 ## 技术架构
