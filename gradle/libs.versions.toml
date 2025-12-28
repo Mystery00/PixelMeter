@@ -2,7 +2,7 @@
 agp = "8.13.2"
 kotlin = "2.3.0"
 
-app-version = "1.0"
+app-version = "1.1"
 android-compileSdk = "36"
 android-minSdk = "31"
 android-targetSdk = "36"
@@ -13,7 +13,6 @@ activityCompose = "1.12.2"
 composeBom = "2025.12.01"
 material-icons = "1.7.8"
 koin = "4.1.1"
-coil = "3.3.0"
 palette = "1.0.0"
 browser = "1.9.0"
 datastore = "1.2.0"
@@ -31,7 +30,6 @@ material-icons-extended = { group = "androidx.compose.material", name = "materia
 androidx-palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "palette" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
-coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
