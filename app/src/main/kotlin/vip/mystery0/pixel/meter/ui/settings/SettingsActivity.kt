@@ -46,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.AlphaSlider
 import com.github.skydoves.colorpicker.compose.AlphaTile
+import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import me.zhanghai.compose.preference.ListPreference
@@ -335,6 +336,12 @@ fun ColorPreference(
                         }
                     )
                     AlphaSlider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(36.dp),
+                        controller = controller,
+                    )
+                    BrightnessSlider(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(36.dp),

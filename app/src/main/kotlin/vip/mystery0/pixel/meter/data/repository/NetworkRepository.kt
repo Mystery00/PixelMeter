@@ -121,6 +121,9 @@ class NetworkRepository(
             dataStoreRepository.overlayBgColor.collect { _overlayBgColor.value = it }
         }
         scope.launch {
+            dataStoreRepository.overlayTextColor.collect { _overlayTextColor.value = it }
+        }
+        scope.launch {
             dataStoreRepository.overlayCornerRadius.collect { _overlayCornerRadius.value = it }
         }
         scope.launch {
