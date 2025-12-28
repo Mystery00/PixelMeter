@@ -22,9 +22,7 @@ import kotlin.math.roundToInt
 
 class NotificationHelper(private val context: Context) {
     companion object {
-        const val CHANNEL_ID = "net_monitor"
-
-        // CHANNEL_NAME is removed in favor of string resource
+        const val CHANNEL_ID = "net_monitor_silent"
         const val NOTIFICATION_ID = 1001
 
         fun createNotificationChannel(context: Context) {
@@ -37,6 +35,7 @@ class NotificationHelper(private val context: Context) {
             )
             notificationManager.createNotificationChannelGroup(group)
 
+            // Use IMPORTANCE_LOW for silent notification
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 context.getString(R.string.notification_channel_name),
@@ -45,6 +44,7 @@ class NotificationHelper(private val context: Context) {
                 description = "Shows real-time network speed in status bar"
                 setShowBadge(false)
                 setGroup(CHANNEL_ID)
+                setSound(null, null)
             }
 
             notificationManager.createNotificationChannel(channel)
@@ -96,7 +96,7 @@ class NotificationHelper(private val context: Context) {
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setContentIntent(pendingIntent)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setVisibility(NotificationCompat.VISIBILITY_SECRET)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
 
         if (!isNotificationEnabled) {
