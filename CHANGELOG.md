@@ -1,23 +1,17 @@
-### 🎉🎉🎉 The First Release 🎉🎉🎉
+* **Optimization: Power & Compatibility (优化：功耗与兼容性)**
+  * **Smart Sleep Policy**: Automatically pauses monitoring 2 minutes after screen off; resumes
+    instantly on screen on.
+  * **智能休眠策略**: 屏幕关闭 2 分钟后自动停止监测，点亮屏幕即刻恢复，大幅降低待机功耗。
+  * **Broad Compatibility**: Lowered Min SDK to 31 (Android 12) from 36.
+  * **广泛兼容**: 最低支持版本下调至 Android 12 (API 31)，适配更多 Pixel 旧机型。
 
-* **Core: Precise Network Monitoring (核心：精准网速监控)**
-    * Implemented `TrafficStats` + `ConnectivityManager` based monitoring logic to filter out
-      virtual interfaces (like `tun0` from VPNs).
-    * 实现了基于 `TrafficStats` 和 `ConnectivityManager` 的监控逻辑，智能过滤 VPN (`tun0`)
-      等虚拟接口流量，解决网速翻倍显示的问题。
+* **Optimization: Experience (优化：体验)**
+  * **Silent Notification**: Default channel configuration is now silent and hidden from lock
+    screen.
+  * **静音通知**: 默认通知渠道调整为静音且不显示在锁屏，减少打扰。
+  * **Logic Fixes**: Improved notification permission logic for Android 13+.
+  * **逻辑修复**: 优化了 Android 13+ 的通知权限请求逻辑。
 
-* **UI: Material Design 3 (界面：Material Design 3)**
-    * Full Jetpack Compose implementation with Material You (Dynamic Color) support.
-    * 全面采用 Jetpack Compose 实现，并支持 Material You (动态取色) 主题。
-
-* **Feature: Notification Monitor (功能：通知栏显示)**
-    * Real-time network speed indicator in the notification bar / status bar.
-    * 支持在通知栏/状态栏实时显示当前网速。
-
-* **Feature: Floating Window (功能：悬浮窗)**
-    * Overlay window with drag-and-drop support and position locking.
-    * 支持桌面悬浮窗显示，可自由拖拽并支持位置锁定。
-
-* **Feature: Toolbox (功能：工具箱)**
-    * Integrated Cloudflare Speed Test using Chrome Custom Tabs.
-    * 集成 Chrome Custom Tabs，内置 Cloudflare 快捷测速功能。
+* **Maintenance (维护)**
+  * Removed unused dependencies (Coil) and refined build scripts.
+  * 移除未使用的依赖库并优化构建脚本。
