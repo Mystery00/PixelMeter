@@ -81,7 +81,7 @@ class SettingsActivity : ComponentActivity() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Settings") },
+                    title = { Text(stringResource(R.string.title_settings)) },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -116,7 +116,7 @@ fun GeneralSection(viewModel: SettingsViewModel) {
 
     var intervalSlider by remember { mutableFloatStateOf(interval.toFloat()) }
 
-    PreferenceCategory(title = { Text("General") })
+    PreferenceCategory(title = { Text(stringResource(R.string.settings_category_general)) })
 
     SliderPreference(
         value = interval.toFloat(),
@@ -125,8 +125,8 @@ fun GeneralSection(viewModel: SettingsViewModel) {
         onSliderValueChange = { intervalSlider = it },
         valueRange = 1000f..5000f,
         valueSteps = 39,
-        title = { Text("数据采样间隔时间") },
-        summary = { Text("过低的间隔时间会导致结果准确度降低，过高的间隔时间结果更准确，但是更新的很慢") },
+        title = { Text(stringResource(R.string.settings_sampling_interval)) },
+        summary = { Text(stringResource(R.string.settings_sampling_interval_desc)) },
         valueText = { Text("${intervalSlider.toLong()}ms") }
     )
 }
@@ -143,27 +143,28 @@ fun OverlaySection(viewModel: SettingsViewModel) {
     val textDown by viewModel.overlayTextDown.collectAsState(initial = "▼ ")
     val upFirst by viewModel.overlayOrderUpFirst.collectAsState(initial = true)
 
-    PreferenceCategory(title = { Text("Overlay") })
+    PreferenceCategory(title = { Text(stringResource(R.string.settings_category_overlay)) })
     SwitchPreference(
         value = isEnabled,
         onValueChange = { viewModel.setOverlayEnabled(it) },
-        title = { Text("Enable Overlay") }
+        title = { Text(stringResource(R.string.config_enable_overlay)) },
+        summary = { Text(stringResource(R.string.config_enable_overlay_desc)) }
     )
 
     if (isEnabled) {
         SwitchPreference(
             value = isLocked,
             onValueChange = { viewModel.setOverlayLocked(it) },
-            title = { Text(stringResource(R.string.config_lock_overlay)) },
+            title = { Text(stringResource(R.string.settings_lock_overlay)) },
             summary = { Text(stringResource(R.string.config_lock_overlay_desc)) }
         )
         ColorPreference(
-            title = "Background Color",
+            title = stringResource(R.string.settings_overlay_bg_color),
             color = Color(bgColor),
             onColorSelected = { viewModel.setOverlayBgColor(it.toArgb()) }
         )
         ColorPreference(
-            title = "Text Color",
+            title = stringResource(R.string.settings_overlay_text_color),
             color = Color(textColor),
             onColorSelected = { viewModel.setOverlayTextColor(it.toArgb()) }
         )
@@ -174,7 +175,7 @@ fun OverlaySection(viewModel: SettingsViewModel) {
             onSliderValueChange = { viewModel.setOverlayCornerRadius(it.toInt()) },
             valueRange = 0f..32f,
             valueSteps = 32,
-            title = { Text("圆角大小") },
+            title = { Text(stringResource(R.string.settings_overlay_corner_radius)) },
             valueText = { Text("${cornerRadius.toInt()}dp") }
         )
         SliderPreference(
@@ -183,28 +184,28 @@ fun OverlaySection(viewModel: SettingsViewModel) {
             sliderValue = textSize,
             onSliderValueChange = { viewModel.setOverlayTextSize(it) },
             valueRange = 8f..24f,
-            title = { Text("文字大小") },
+            title = { Text(stringResource(R.string.settings_overlay_text_size)) },
             valueText = { Text("${"%.1f".format(Locale.getDefault(), textSize)}sp") }
         )
         TextFieldPreference(
             value = textUp,
             onValueChange = { viewModel.setOverlayTextUp(it) },
             textToValue = { it },
-            title = { Text("上行文本前缀") },
-            summary = { Text("显示上行流量的文本前缀，当前值为：${textUp}") },
+            title = { Text(stringResource(R.string.settings_text_prefix_up)) },
+            summary = { Text(stringResource(R.string.settings_text_prefix_up_desc, textUp)) },
         )
         TextFieldPreference(
             value = textDown,
             onValueChange = { viewModel.setOverlayTextDown(it) },
             textToValue = { it },
-            title = { Text("下行文本前缀") },
-            summary = { Text("显示下行流量的文本前缀，当前值为：${textDown}") },
+            title = { Text(stringResource(R.string.settings_text_prefix_down)) },
+            summary = { Text(stringResource(R.string.settings_text_prefix_down_desc, textDown)) },
         )
         SwitchPreference(
             value = upFirst,
             onValueChange = { viewModel.setOverlayOrderUpFirst(it) },
-            title = { Text("优先显示上行") },
-            summary = { Text(if (upFirst) "上行流量显示在前面" else "下行流量显示在前面") }
+            title = { Text(stringResource(R.string.settings_show_up_first)) },
+            summary = { Text(stringResource(R.string.settings_show_up_first_desc)) }
         )
     }
 }
@@ -218,11 +219,12 @@ fun NotificationSection(viewModel: SettingsViewModel) {
     val upFirst by viewModel.notificationOrderUpFirst.collectAsState(initial = true)
     val displayMode by viewModel.notificationDisplayMode.collectAsState(initial = 0)
 
-    PreferenceCategory(title = { Text("Notification") })
+    PreferenceCategory(title = { Text(stringResource(R.string.settings_category_notification)) })
     SwitchPreference(
         value = isEnabled,
         onValueChange = { viewModel.setNotificationEnabled(it) },
-        title = { Text("Enable Notification") }
+        title = { Text(stringResource(R.string.config_enable_notification)) },
+        summary = { Text(stringResource(R.string.config_enable_notification_desc)) }
     )
 
     if (isEnabled) {
@@ -236,55 +238,69 @@ fun NotificationSection(viewModel: SettingsViewModel) {
             value = textUp,
             onValueChange = { viewModel.setNotificationTextUp(it) },
             textToValue = { it },
-            title = { Text("上行文本前缀") },
-            summary = { Text("显示上行流量的文本前缀，当前值为：${textUp}") },
+            title = { Text(stringResource(R.string.settings_text_prefix_up)) },
+            summary = { Text(stringResource(R.string.settings_text_prefix_up_desc, textUp)) },
         )
         TextFieldPreference(
             value = textDown,
             onValueChange = { viewModel.setNotificationTextDown(it) },
             textToValue = { it },
-            title = { Text("下行文本前缀") },
-            summary = { Text("显示下行流量的文本前缀，当前值为：${textDown}") },
+            title = { Text(stringResource(R.string.settings_text_prefix_down)) },
+            summary = { Text(stringResource(R.string.settings_text_prefix_down_desc, textDown)) },
         )
         SwitchPreference(
             value = upFirst,
             onValueChange = { viewModel.setNotificationOrderUpFirst(it) },
-            title = { Text("优先显示上行") },
-            summary = { Text(if (upFirst) "上行流量显示在前面" else "下行流量显示在前面") }
+            title = { Text(stringResource(R.string.settings_show_up_first)) },
+            summary = { Text(stringResource(R.string.settings_show_up_first_desc)) }
         )
 
+        val labelTotal = stringResource(R.string.settings_display_mode_total)
+        val labelUpload = stringResource(R.string.settings_display_mode_upload)
+        val labelDownload = stringResource(R.string.settings_display_mode_download)
+
         val displayModeLabel = when (displayMode) {
-            1 -> "仅显示上行流量"
-            2 -> "仅显示下行流量"
-            else -> "显示总流量"
+            1 -> labelUpload
+            2 -> labelDownload
+            else -> labelTotal
         }
         ListPreference(
             value = displayModeLabel,
             onValueChange = {
                 val mode = when (it) {
-                    "仅显示上行流量" -> 1
-                    "仅显示下行流量" -> 2
+                    labelUpload -> 1
+                    labelDownload -> 2
                     else -> 0
                 }
                 viewModel.setNotificationDisplayMode(mode)
             },
-            title = { Text("Display Content") },
-            values = listOf("显示总流量", "仅显示上行流量", "仅显示下行流量"),
+            title = { Text(stringResource(R.string.settings_notification_display_mode)) },
+            values = listOf(
+                labelTotal,
+                labelUpload,
+                labelDownload
+            ),
             summary = { Text(displayModeLabel) }
         )
     }
 }
 
+// Helper to get string inside Composable context where possible, or use Context
+@Composable
+fun getString(id: Int): String {
+    return stringResource(id)
+}
+
 @Composable
 fun AboutSection() {
     val uriHandler = LocalUriHandler.current
-    PreferenceCategory(title = { Text("About") })
+    PreferenceCategory(title = { Text(stringResource(R.string.settings_category_about)) })
     Preference(
-        title = { Text("App Version") },
+        title = { Text(stringResource(R.string.settings_app_version)) },
         summary = { Text(BuildConfig.VERSION_NAME) }
     )
     Preference(
-        title = { Text("GitHub") },
+        title = { Text(stringResource(R.string.settings_github)) },
         summary = { Text("https://github.com/Mystery00/PixelMeter") },
         onClick = { uriHandler.openUri("https://github.com/Mystery00/PixelMeter") }
     )
@@ -319,7 +335,7 @@ fun ColorPreference(
 
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("选择颜色") },
+            title = { Text(stringResource(R.string.color_picker_title)) },
             text = {
                 Column(
                     modifier = Modifier.padding(16.dp),
