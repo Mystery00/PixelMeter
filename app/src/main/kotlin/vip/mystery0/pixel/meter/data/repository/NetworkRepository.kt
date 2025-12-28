@@ -150,7 +150,6 @@ class NetworkRepository(
                 val delayMills = interval - (System.currentTimeMillis() - startTime)
                 delay(delayMills.coerceAtLeast(0))
             }
-            Log.i(TAG, "stopMonitoring")
         }
     }
 
