@@ -60,4 +60,9 @@
     <string name="notification_channel_name">Network Monitor Service</string>
     <string name="notification_content_title">Network Speed Monitor</string>
     <string name="notification_content_text">Monitoring in background…</string>
+
+    <string name="tile_overlay_label">Overlay</string>
+    <string name="tile_notification_label">Notification</string>
+    <string name="tile_desc_active">Active</string>
+    <string name="tile_desc_inactive">Inactive</string>
 </resources>
