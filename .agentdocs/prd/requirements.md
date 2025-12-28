@@ -61,20 +61,37 @@ Kernel 数据剔除虚拟接口流量，还原真实网速。
 | **F02** | **数据源**  | 核心数据源  | 调用 `ConnectivityManager` + `TrafficStats` 获取过滤后的物理接口流量。  | P0  |
 | **F04** | **UI**   | 仪表盘首页  | 显示当前网速、服务运行状态。                                           | P0  |
 
-| **F06** | **UI**   | 通知栏更新       | 每秒绘制 Bitmap 并更新 Notification。                            | P0  |
-| **F07** | **UI**   | 悬浮窗         | 实现 Compose 悬浮窗，处理 Touch 事件与 WindowManager 交互。            | P1  |
+| **F06** | **UI**   | 通知栏更新 |每秒绘制 Bitmap 并更新
+Notification。支持自定义显示模式（总网速/仅上行/仅下行）和文本前缀。 | P0 |
+| **F07** | **UI**   | 悬浮窗 | 实现 Compose 悬浮窗。支持自定义背景/文字颜色、圆角、字号、前缀及顺序。 |
+P1 |
 | **F08** | **工具**   | 网络测速        | CCT 呼起 Cloudflare Speed Test。                            | P2  |
+| **F09** | **系统**   | 快速设置磁贴 | 提供 TileService，支持我们在下拉栏快速开关悬浮窗和通知显示。 |
+P1 |
+| **F10** | **系统**   | 实时更新 (Live Update)| 适配 Android 16+ Status Bar Chip。 | P2 |
 
 ## 5. 数据存储 (DataStore)
 
-| Key                        | 类型      | 默认值     | 说明        |
-|:---------------------------|:--------|:--------|:----------|
-| `key_live_update`          | Boolean | `false` | 首页实时更新开关  |
-| `key_notification_enabled` | Boolean | `true`  | 通知栏开关     |
-| `key_overlay_enabled`      | Boolean | `false` | 悬浮窗开关     |
-| `key_overlay_locked`       | Boolean | `false` | 悬浮窗位置锁定开关 |
-| `key_overlay_x`            | Int     | `100`   | 悬浮窗 X 坐标  |
-| `key_overlay_y`            | Int     | `200`   | 悬浮窗 Y 坐标  |
+| Key                               | 类型      | 默认值          | 说明                              |
+|:----------------------------------|:--------|:-------------|:--------------------------------|
+| `key_live_update`                 | Boolean | `false`      | 首页实时更新开关                        |
+| `key_notification_enabled`        | Boolean | `true`       | 通知栏开关                           |
+| `key_overlay_enabled`             | Boolean | `false`      | 悬浮窗开关                           |
+| `key_overlay_locked`              | Boolean | `false`      | 悬浮窗位置锁定开关                       |
+| `key_overlay_x`                   | Int     | `100`        | 悬浮窗 X 坐标                        |
+| `key_overlay_y`                   | Int     | `200`        | 悬浮窗 Y 坐标                        |
+| `key_sampling_interval`           | Long    | `1500`       | 采样间隔 (ms)                       |
+| `key_overlay_bg_color`            | Int     | `0xCC000000` | 悬浮窗背景色                          |
+| `key_overlay_text_color`          | Int     | `0xFFFFFFFF` | 悬浮窗文字色                          |
+| `key_overlay_corner_radius`       | Int     | `8`          | 悬浮窗圆角 (dp)                      |
+| `key_overlay_text_size`           | Float   | `10.0`       | 悬浮窗字号 (sp)                      |
+| `key_overlay_text_up`             | String  | `▲ `         | 上行前缀                            |
+| `key_overlay_text_down`           | String  | `▼ `         | 下行前缀                            |
+| `key_overlay_order_up_first`      | Boolean | `true`       | 优先显示上行                          |
+| `key_notification_text_up`        | String  | `▲ `         | 通知栏上行前缀                         |
+| `key_notification_text_down`      | String  | `▼ `         | 通知栏下行前缀                         |
+| `key_notification_order_up_first` | Boolean | `true`       | 通知栏优先显示上行                       |
+| `key_notification_display_mode`   | Int     | `0`          | 通知栏显示模式 (0:Total, 1:Up, 2:Down) |
 
 ## 6. 非功能性需求 (NFR)
 

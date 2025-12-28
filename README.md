@@ -40,9 +40,15 @@ interfaces (Wi-Fi, Cellular, Ethernet) to provide accurate real-time speed stati
 - **Native Experience**: Built with Jetpack Compose and Material 3, supporting Dynamic Color on
   Pixel devices.
 - **Flexible Display**:
-    - **Notification Bar**: Dynamic icon that updates in real-time.
-    - **Floating Window**: Overlay that can be toggled and moved independently.
-    - **Combined Mode**: Option to show total speed (Upload + Download).
+    - **Notification Bar**: Dynamic icon that updates in real-time. Supports customizable display
+      modes (Total Speed, Upload Only, Download Only) and text prefixes.
+    - **Floating Window**: Overlay that can be toggled and moved independently. Fully customizable:
+        - Background and Text Color
+        - Corner Radius and Text Size
+        - Custom Text Prefixes and Order
+    - **Quick Settings Tiles**: Toggle Overlay and Notification directly from the system control
+      panel.
+- **Live Update**: Supports Android 16+ status bar chip update.
 - **Privacy Focused**: All data is processed locally. No traffic data is uploaded.
 - **Built-in Tools**: Integrated Cloudflare Speed Test via Chrome Custom Tabs.
 

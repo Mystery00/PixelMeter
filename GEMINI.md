@@ -20,6 +20,7 @@
       - 首次启动不开启显示，由用户选择。
       - 通知栏动态图标 (Notification Icon): 实时绘制 Bitmap。双向模式下合并展示总量。
         - 悬浮窗 (Floating Window): 使用 Compose 挂载到 WindowManager，支持独立开关。
+        - **快速设置 (Quick Settings)**: 提供 TileService 支持系统下拉栏快捷开关。
 - **代码结构**:
     - 单个文件原则上不超过 1000 行。
     - **Service 分离**: 网速监听核心逻辑需运行在前台服务 (Foreground Service, type=`dataSync`) 中。
@@ -70,6 +71,7 @@
   - **CompileSDK/TargetSDK**: 36 (Android 16)。
 - **关键技术决策**:
     - **DI**: Koin (轻量级，适合本工具)。
+  - **Settings UI**: `me.zhanghai.compose.preference` + `com.github.skydoves:colorpicker-compose`。
     - **Browser**: Chrome Custom Tabs (CCT) 用于集成 Cloudflare 测速。
 
 
