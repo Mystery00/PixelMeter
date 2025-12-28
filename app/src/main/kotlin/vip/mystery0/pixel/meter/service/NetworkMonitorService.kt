@@ -47,10 +47,15 @@ class NetworkMonitorService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val initialNotif = notificationHelper.buildNotification(
-            NetSpeedData(0, 0),
-            false,
-            true,
-            "TX ", "RX ", true, 0
+            speed = NetSpeedData(0, 0),
+            isLiveUpdate = false,
+            isNotificationEnabled = true,
+            textUp = "▲ ",
+            textDown = "▼ ",
+            upFirst = true,
+            displayMode = 0,
+            textSize = 0.65f,
+            unitSize = 0.35f
         )
 
         try {
@@ -92,18 +97,22 @@ class NetworkMonitorService : Service() {
                 }
 
                 // Notification logic
-                val isLiveUpdate = repository.isLiveUpdateEnabled.value
-                val isNotificationEnabled = repository.isNotificationEnabled.value
-                val textUp = repository.notificationTextUp.value
-                val textDown = repository.notificationTextDown.value
-                val upFirst = repository.notificationOrderUpFirst.value
-                val displayMode = repository.notificationDisplayMode.value
+                val notification = withContext(Dispatchers.Default) {
+                    val isLiveUpdate = repository.isLiveUpdateEnabled.value
+                    val isNotificationEnabled = repository.isNotificationEnabled.value
+                    val textUp = repository.notificationTextUp.value
+                    val textDown = repository.notificationTextDown.value
+                    val upFirst = repository.notificationOrderUpFirst.value
+                    val displayMode = repository.notificationDisplayMode.value
+                    val textSize = repository.notificationTextSize.value
+                    val unitSize = repository.notificationUnitSize.value
 
-                val notification =
                     notificationHelper.buildNotification(
                         speed, isLiveUpdate, isNotificationEnabled,
-                        textUp, textDown, upFirst, displayMode
+                        textUp, textDown, upFirst, displayMode,
+                        textSize, unitSize
                     )
+                }
                 notificationManager.notify(NotificationHelper.NOTIFICATION_ID, notification)
             }
         }

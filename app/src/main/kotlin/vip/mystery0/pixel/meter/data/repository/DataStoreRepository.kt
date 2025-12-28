@@ -40,6 +40,8 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
         val KEY_NOTIFICATION_ORDER_UP_FIRST =
             booleanPreferencesKey("key_notification_order_up_first")
         val KEY_NOTIFICATION_DISPLAY_MODE = intPreferencesKey("key_notification_display_mode")
+        val KEY_NOTIFICATION_TEXT_SIZE = floatPreferencesKey("key_notification_text_size")
+        val KEY_NOTIFICATION_UNIT_SIZE = floatPreferencesKey("key_notification_unit_size")
     }
 
     val isLiveUpdateEnabled: Flow<Boolean> = dataStore.data
@@ -117,12 +119,12 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
 
     val notificationTextUp: Flow<String> = dataStore.data
         .map { preferences ->
-            preferences[KEY_NOTIFICATION_TEXT_UP] ?: "TX "
+            preferences[KEY_NOTIFICATION_TEXT_UP] ?: "▲ "
         }
 
     val notificationTextDown: Flow<String> = dataStore.data
         .map { preferences ->
-            preferences[KEY_NOTIFICATION_TEXT_DOWN] ?: "RX "
+            preferences[KEY_NOTIFICATION_TEXT_DOWN] ?: "▼ "
         }
 
     val notificationOrderUpFirst: Flow<Boolean> = dataStore.data
@@ -133,6 +135,16 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     val notificationDisplayMode: Flow<Int> = dataStore.data
         .map { preferences ->
             preferences[KEY_NOTIFICATION_DISPLAY_MODE] ?: 0 // 0: Total, 1: Up, 2: Down
+        }
+
+    val notificationTextSize: Flow<Float> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_NOTIFICATION_TEXT_SIZE] ?: 0.65f
+        }
+
+    val notificationUnitSize: Flow<Float> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_NOTIFICATION_UNIT_SIZE] ?: 0.35f
         }
 
     suspend fun setLiveUpdateEnabled(enabled: Boolean) {
@@ -235,6 +247,18 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun setNotificationDisplayMode(mode: Int) {
         dataStore.edit { preferences ->
             preferences[KEY_NOTIFICATION_DISPLAY_MODE] = mode
+        }
+    }
+
+    suspend fun setNotificationTextSize(size: Float) {
+        dataStore.edit { preferences ->
+            preferences[KEY_NOTIFICATION_TEXT_SIZE] = size
+        }
+    }
+
+    suspend fun setNotificationUnitSize(size: Float) {
+        dataStore.edit { preferences ->
+            preferences[KEY_NOTIFICATION_UNIT_SIZE] = size
         }
     }
 }

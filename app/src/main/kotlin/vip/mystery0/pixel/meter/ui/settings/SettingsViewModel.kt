@@ -26,6 +26,8 @@ class SettingsViewModel : ViewModel(), KoinComponent {
     val notificationTextDown = repository.notificationTextDown
     val notificationOrderUpFirst = repository.notificationOrderUpFirst
     val notificationDisplayMode = repository.notificationDisplayMode
+    val notificationTextSize = repository.notificationTextSize
+    val notificationUnitSize = repository.notificationUnitSize
 
     // General Settings
     val samplingInterval = repository.samplingInterval
@@ -50,4 +52,6 @@ class SettingsViewModel : ViewModel(), KoinComponent {
         repository.setNotificationOrderUpFirst(upFirst)
 
     fun setNotificationDisplayMode(mode: Int) = repository.setNotificationDisplayMode(mode)
+    fun setNotificationTextSize(size: Float) = repository.setNotificationTextSize(size)
+    fun setNotificationUnitSize(size: Float) = repository.setNotificationUnitSize(size)
 }

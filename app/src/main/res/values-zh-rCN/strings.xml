@@ -45,6 +45,8 @@
     <string name="settings_display_mode_total">显示总网速</string>
     <string name="settings_display_mode_upload">仅显示上行网速</string>
     <string name="settings_display_mode_download">仅显示下行网速</string>
+    <string name="settings_notification_text_size">图标数字大小</string>
+    <string name="settings_notification_unit_size">图标单位大小</string>
     <string name="settings_category_about">关于</string>
     <string name="settings_app_version">应用版本</string>
     <string name="settings_github">GitHub</string>

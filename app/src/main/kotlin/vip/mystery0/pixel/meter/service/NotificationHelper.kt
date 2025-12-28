@@ -82,7 +82,9 @@ class NotificationHelper(private val context: Context) {
         textUp: String,
         textDown: String,
         upFirst: Boolean,
-        displayMode: Int
+        displayMode: Int,
+        textSize: Float = 0.65f,
+        unitSize: Float = 0.35f
     ): Notification {
         val intent = Intent().apply {
             setClassName(context, MainActivity::class.java.name)
@@ -138,8 +140,12 @@ class NotificationHelper(private val context: Context) {
             // Draw Bitmap with speed
             bitmap.eraseColor(Color.TRANSPARENT)
             val cx = size / 2f
-            val cyValue = size * 0.5f
+            val cyValue =
+                size * 0.5f // Ideally this offset might need adjustment based on size, but keeping simple for now
             val cyUnit = size * 0.95f
+
+            textPaint.textSize = size * textSize
+            unitPaint.textSize = size * unitSize
 
             canvas.drawText(valueStr, cx, cyValue, textPaint)
             canvas.drawText(unitStr, cx, cyUnit, unitPaint)

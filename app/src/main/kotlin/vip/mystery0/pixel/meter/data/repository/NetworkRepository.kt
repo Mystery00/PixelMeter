@@ -76,6 +76,12 @@ class NetworkRepository(
     private val _notificationDisplayMode = MutableStateFlow(0)
     val notificationDisplayMode: StateFlow<Int> = _notificationDisplayMode.asStateFlow()
 
+    private val _notificationTextSize = MutableStateFlow(0.65f)
+    val notificationTextSize: StateFlow<Float> = _notificationTextSize.asStateFlow()
+
+    private val _notificationUnitSize = MutableStateFlow(0.35f)
+    val notificationUnitSize: StateFlow<Float> = _notificationUnitSize.asStateFlow()
+
     private var monitoringJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.Default)
 
@@ -101,6 +107,8 @@ class NetworkRepository(
             _notificationTextDown.value = dataStoreRepository.notificationTextDown.first()
             _notificationOrderUpFirst.value = dataStoreRepository.notificationOrderUpFirst.first()
             _notificationDisplayMode.value = dataStoreRepository.notificationDisplayMode.first()
+            _notificationTextSize.value = dataStoreRepository.notificationTextSize.first()
+            _notificationUnitSize.value = dataStoreRepository.notificationUnitSize.first()
         }
         scope.launch {
             dataStoreRepository.isLiveUpdateEnabled.collect { _isLiveUpdateEnabled.value = it }
@@ -152,6 +160,16 @@ class NetworkRepository(
         scope.launch {
             dataStoreRepository.notificationDisplayMode.collect {
                 _notificationDisplayMode.value = it
+            }
+        }
+        scope.launch {
+            dataStoreRepository.notificationTextSize.collect {
+                _notificationTextSize.value = it
+            }
+        }
+        scope.launch {
+            dataStoreRepository.notificationUnitSize.collect {
+                _notificationUnitSize.value = it
             }
         }
     }
@@ -218,6 +236,14 @@ class NetworkRepository(
 
     fun setNotificationDisplayMode(mode: Int) {
         scope.launch { dataStoreRepository.setNotificationDisplayMode(mode) }
+    }
+
+    fun setNotificationTextSize(size: Float) {
+        scope.launch { dataStoreRepository.setNotificationTextSize(size) }
+    }
+
+    fun setNotificationUnitSize(size: Float) {
+        scope.launch { dataStoreRepository.setNotificationUnitSize(size) }
     }
 
     suspend fun getOverlayPosition(): Pair<Int, Int> {

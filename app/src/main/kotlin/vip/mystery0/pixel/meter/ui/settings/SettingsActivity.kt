@@ -33,7 +33,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -114,20 +113,18 @@ class SettingsActivity : ComponentActivity() {
 fun GeneralSection(viewModel: SettingsViewModel) {
     val interval by viewModel.samplingInterval.collectAsState(initial = 1500L)
 
-    var intervalSlider by remember { mutableFloatStateOf(interval.toFloat()) }
-
     PreferenceCategory(title = { Text(stringResource(R.string.settings_category_general)) })
 
     SliderPreference(
-        value = interval.toFloat(),
-        onValueChange = { viewModel.setSamplingInterval(it.toLong()) },
-        sliderValue = intervalSlider,
-        onSliderValueChange = { intervalSlider = it },
+        value = 0F,
+        onValueChange = { },
+        sliderValue = interval.toFloat(),
+        onSliderValueChange = { viewModel.setSamplingInterval(it.toLong()) },
         valueRange = 1000f..5000f,
         valueSteps = 39,
         title = { Text(stringResource(R.string.settings_sampling_interval)) },
         summary = { Text(stringResource(R.string.settings_sampling_interval_desc)) },
-        valueText = { Text("${intervalSlider.toLong()}ms") }
+        valueText = { Text("${interval}ms") }
     )
 }
 
@@ -169,8 +166,8 @@ fun OverlaySection(viewModel: SettingsViewModel) {
             onColorSelected = { viewModel.setOverlayTextColor(it.toArgb()) }
         )
         SliderPreference(
-            value = cornerRadius.toFloat(),
-            onValueChange = { viewModel.setOverlayCornerRadius(it.toInt()) },
+            value = 0F,
+            onValueChange = { },
             sliderValue = cornerRadius.toFloat(),
             onSliderValueChange = { viewModel.setOverlayCornerRadius(it.toInt()) },
             valueRange = 0f..32f,
@@ -179,8 +176,8 @@ fun OverlaySection(viewModel: SettingsViewModel) {
             valueText = { Text("${cornerRadius.toInt()}dp") }
         )
         SliderPreference(
-            value = textSize,
-            onValueChange = { viewModel.setOverlayTextSize(it) },
+            value = 0F,
+            onValueChange = { },
             sliderValue = textSize,
             onSliderValueChange = { viewModel.setOverlayTextSize(it) },
             valueRange = 8f..24f,
@@ -218,6 +215,8 @@ fun NotificationSection(viewModel: SettingsViewModel) {
     val textDown by viewModel.notificationTextDown.collectAsState(initial = "▼ ")
     val upFirst by viewModel.notificationOrderUpFirst.collectAsState(initial = true)
     val displayMode by viewModel.notificationDisplayMode.collectAsState(initial = 0)
+    val textSize by viewModel.notificationTextSize.collectAsState(initial = 0.65f)
+    val unitSize by viewModel.notificationUnitSize.collectAsState(initial = 0.35f)
 
     PreferenceCategory(title = { Text(stringResource(R.string.settings_category_notification)) })
     SwitchPreference(
@@ -281,6 +280,27 @@ fun NotificationSection(viewModel: SettingsViewModel) {
                 labelDownload
             ),
             summary = { Text(displayModeLabel) }
+        )
+
+        SliderPreference(
+            enabled = !isLiveUpdateEnabled,
+            value = 0F,
+            onValueChange = { },
+            sliderValue = textSize,
+            onSliderValueChange = { viewModel.setNotificationTextSize(it) },
+            valueRange = 0.1f..1.0f,
+            title = { Text(stringResource(R.string.settings_notification_text_size)) },
+            valueText = { Text("%.2f".format(textSize)) }
+        )
+        SliderPreference(
+            enabled = !isLiveUpdateEnabled,
+            value = 0F,
+            onValueChange = { },
+            sliderValue = unitSize,
+            onSliderValueChange = { viewModel.setNotificationUnitSize(it) },
+            valueRange = 0.1f..1.0f,
+            title = { Text(stringResource(R.string.settings_notification_unit_size)) },
+            valueText = { Text("%.2f".format(unitSize)) }
         )
     }
 }
