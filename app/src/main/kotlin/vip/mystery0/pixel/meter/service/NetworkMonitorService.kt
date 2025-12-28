@@ -2,13 +2,17 @@ package vip.mystery0.pixel.meter.service
 
 import android.app.NotificationManager
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ServiceInfo
 import android.os.IBinder
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
@@ -34,6 +38,11 @@ class NetworkMonitorService : Service() {
     override fun onCreate() {
         super.onCreate()
         NotificationHelper.createNotificationChannel(this)
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_SCREEN_ON)
+            addAction(Intent.ACTION_SCREEN_OFF)
+        }
+        registerReceiver(screenReceiver, filter)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -87,9 +96,38 @@ class NetworkMonitorService : Service() {
         }
     }
 
+    private val screenReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                Intent.ACTION_SCREEN_OFF -> {
+                    Log.d(TAG, "Screen OFF: Scheduling sleep in 2 minutes")
+                    stopMonitoringJob?.cancel()
+                    stopMonitoringJob = scope.launch {
+                        delay(2 * 60 * 1000L) // 2 minutes
+                        Log.d(TAG, "Screen OFF Timeout: Stopping monitoring to save power")
+                        repository.stopMonitoring()
+                    }
+                }
+
+                Intent.ACTION_SCREEN_ON -> {
+                    Log.d(TAG, "Screen ON: Cancelling sleep timer")
+                    stopMonitoringJob?.cancel()
+                    if (!repository.isMonitoring.value) {
+                        Log.d(TAG, "Screen ON: Resuming monitoring")
+                        startMonitoring()
+                    }
+                }
+            }
+        }
+    }
+
+    private var stopMonitoringJob: Job? = null
+
     override fun onDestroy() {
         super.onDestroy()
+        unregisterReceiver(screenReceiver)
         serviceJob?.cancel()
+        stopMonitoringJob?.cancel()
         overlayWindow.hide()
         repository.stopMonitoring()
         stopForeground(STOP_FOREGROUND_REMOVE)

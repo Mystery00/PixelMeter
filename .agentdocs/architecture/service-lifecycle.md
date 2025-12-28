@@ -47,3 +47,26 @@ Android 14 对前台服务有严格限制：
 
 - 当用户手动关闭功能，或点击通知栏 "Exit" 按钮时，调用 `stopForeground(STOP_FOREGROUND_REMOVE)` 并
   `stopSelf()`，彻底释放资源，停止计费/耗电。
+
+## 5. 电量与性能优化 (Power Optimization)
+
+为了避免长期占用 CPU 导致设备无法休眠，App 内置了智能休眠与唤醒机制：
+
+### 5.1 屏幕状态监听
+
+Service 内部通过 `BroadcastReceiver` 监听屏幕状态广播：
+
+- `Intent.ACTION_SCREEN_OFF`: 屏幕关闭。
+- `Intent.ACTION_SCREEN_ON`: 屏幕点亮。
+
+### 5.2 智能休眠策略
+
+1. **延迟停止**: 当检测到 **屏幕关闭** 时，Service 并不会立即停止监听（考虑到用户可能短按电源键），而是启动一个
+   **2分钟** 的倒计时。
+2. **进入休眠**: 若 2分钟内屏幕未重新点亮，Service 将主动停止网络监听协程 (`stopMonitoring`)，释放 CPU
+   锁，允许设备进入深度休眠 (Doze Mode)。
+3. **即时唤醒**: 当检测到 **屏幕点亮** 时：
+    - 若仍在 2分钟倒计时内，直接取消倒计时，无缝继续。
+    - 若已进入休眠状态，立即重启网络监听协程 (`startMonitoring`)，恢复网速更新。
+
+此策略在保证用户体验（点亮屏幕即见网速）的同时，显著降低了待机功耗。
