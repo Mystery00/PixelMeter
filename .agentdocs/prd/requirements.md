@@ -55,20 +55,19 @@ Kernel 数据剔除虚拟接口流量，还原真实网速。
 
 ## 4. 功能需求详情
 
-| ID      | 模块       | 功能点    | 描述                                                       | 优先级 |
-|:--------|:---------|:-------|:---------------------------------------------------------|:----|
-| **F01** | **核心服务** | 前台服务保活 | 启动 `dataSync` 类型的 Foreground Service，需处理 Android 14+ 适配。 | P0  |
-| **F02** | **数据源**  | 核心数据源  | 调用 `ConnectivityManager` + `TrafficStats` 获取过滤后的物理接口流量。  | P0  |
-| **F04** | **UI**   | 仪表盘首页  | 显示当前网速、服务运行状态。                                           | P0  |
-
-| **F06** | **UI**   | 通知栏更新 |每秒绘制 Bitmap 并更新
-Notification。支持自定义显示模式（总网速/仅上行/仅下行）和文本前缀。 | P0 |
-| **F07** | **UI**   | 悬浮窗 | 实现 Compose 悬浮窗。支持自定义背景/文字颜色、圆角、字号、前缀及顺序。 |
-P1 |
-| **F08** | **工具**   | 网络测速        | CCT 呼起 Cloudflare Speed Test。                            | P2  |
-| **F09** | **系统**   | 快速设置磁贴 | 提供 TileService，支持我们在下拉栏快速开关悬浮窗和通知显示。 |
-P1 |
-| **F10** | **系统**   | 实时更新 (Live Update)| 适配 Android 16+ Status Bar Chip。 | P2 |
+| ID                                        | 模块       | 功能点                | 描述                                                                     | 优先级 |
+|:------------------------------------------|:---------|:-------------------|:-----------------------------------------------------------------------|:----|
+| **F01**                                   | **核心服务** | 前台服务保活             | 启动 `dataSync` 类型的 Foreground Service，需处理 Android 14+ 适配。支持开机自启、最近任务隐藏。 | P0  |
+| **F02**                                   | **数据源**  | 核心数据源              | 调用 `ConnectivityManager` + `TrafficStats` 获取过滤后的物理接口流量。                | P0  |
+| **F03**                                   | **UI**   | 仪表盘首页              | 显示当前网速、服务运行状态。                                                         | P0  |
+| **F04**                                   | **UI**   | 通知栏更新              | 每秒绘制 Bitmap 并更新                                                        
+ Notification。支持自定义显示模式（总网速/仅上行/仅下行）和文本前缀。 | P0       |
+| **F05**                                   | **UI**   | 悬浮窗                | 实现 Compose 悬浮窗。支持自定义背景/文字颜色、圆角、字号、前缀及顺序。                               |
+ P1                                        |
+| **F06**                                   | **工具**   | 网络测速               | CCT 呼起 Cloudflare Speed Test。                                          | P2  |
+| **F07**                                   | **系统**   | 快速设置磁贴             | 提供 TileService，支持我们在下拉栏快速开关悬浮窗和通知显示。                                   |
+ P1                                        |
+| **F08**                                   | **系统**   | 实时更新 (Live Update) | 适配 Android 16+ Status Bar Chip。                                        | P2  |
 
 ## 5. 数据存储 (DataStore)
 
@@ -78,6 +77,8 @@ P1 |
 | `key_notification_enabled`        | Boolean | `true`       | 通知栏开关                           |
 | `key_overlay_enabled`             | Boolean | `false`      | 悬浮窗开关                           |
 | `key_overlay_locked`              | Boolean | `false`      | 悬浮窗位置锁定开关                       |
+| `key_auto_start_service`          | Boolean | `false`      | 开机自启开关 (需权限)                    |
+| `key_hide_from_recents`           | Boolean | `false`      | 最近任务隐藏开关                        |
 | `key_overlay_x`                   | Int     | `100`        | 悬浮窗 X 坐标                        |
 | `key_overlay_y`                   | Int     | `200`        | 悬浮窗 Y 坐标                        |
 | `key_sampling_interval`           | Long    | `1500`       | 采样间隔 (ms)                       |
@@ -92,6 +93,9 @@ P1 |
 | `key_notification_text_down`      | String  | `▼ `         | 通知栏下行前缀                         |
 | `key_notification_order_up_first` | Boolean | `true`       | 通知栏优先显示上行                       |
 | `key_notification_display_mode`   | Int     | `0`          | 通知栏显示模式 (0:Total, 1:Up, 2:Down) |
+| `key_notification_text_size`      | Float   | `0.65`       | 通知栏图标数字大小                       |
+| `key_notification_unit_size`      | Float   | `0.35`       | 通知栏图标单位大小                       |
+| `key_overlay_use_default_colors`  | Boolean | `false`      | 悬浮窗是否使用默认系统颜色                   |
 
 ## 6. 非功能性需求 (NFR)
 

@@ -22,6 +22,15 @@
 2. **Context.startForegroundService()**: 启动服务。
 3. **startForeground()**: 服务 onCreate/onStartCommand 中必须在 5 秒内调用 `startForeground`
    ，绑定一个持续显示的 Notification，否则会被系统杀掉并抛出 ANR。
+   26:
+   27: ### 2.2 开机自启 (Auto-start)
+   28:
+   29: - **触发机制**: 监听 `BOOT_COMPLETED` 和 `QUICKBOOT_POWERON` 广播。
+   30: - **条件判断**:
+   31:     1. 用户开关: 检查 `key_auto_start_service` 是否为 `true`。
+   32:     2. 权限校验: 直检查应用是否持有 **悬浮窗权限** 或 **通知权限**。若两者皆无，则视为非法状态，不启动服务（避免
+   Android 14+ 启动 FGS 崩溃）。
+   33: - **实现**: `BootReceiver` 在满足上述条件后调用 `startForegroundService`。
 
 ### 2.2 周期性任务 (Ticker)
 

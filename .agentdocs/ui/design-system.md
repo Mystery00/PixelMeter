@@ -13,6 +13,10 @@ Pixel Meter 严格遵循 Modern Android Development (MAD) 指南，全面采用 
 - **主要控件**: 使用 M3 标准组件 (`Scaffold`, `TopAppBar`, `Switch`, `Card`, `NavigationBar` 等)。
 - **设置页面 (Settings)**:
     - 使用 `me.zhanghai.compose.preference` 构建原生风格的设置列表。
+  - **分块明确**:
+      - **General**: 基础采样间隔与权限状态。
+      - **Background**: 包含电池优化、最近任务隐藏等保活相关设置。
+      - **Notification/Overlay**: 独立配置块。
     - 使用 `com.github.skydoves:colorpicker-compose` 实现颜色选择器。
 
 ## 2. 通知栏动态图标 (Notification Icon)
