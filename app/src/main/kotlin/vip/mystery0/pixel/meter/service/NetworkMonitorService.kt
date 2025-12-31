@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ServiceInfo
+import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
@@ -60,11 +61,19 @@ class NetworkMonitorService : Service() {
         )
 
         try {
-            startForeground(
-                NotificationHelper.NOTIFICATION_ID,
-                initialNotif,
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(
+                    NotificationHelper.NOTIFICATION_ID,
+                    initialNotif,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+                )
+            } else {
+                startForeground(
+                    NotificationHelper.NOTIFICATION_ID,
+                    initialNotif,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                )
+            }
         } catch (e: Exception) {
             Log.e(TAG, "onStartCommand: start foreground error", e)
             stopSelf()
