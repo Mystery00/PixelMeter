@@ -82,6 +82,12 @@ class NetworkRepository(
     private val _notificationUnitSize = MutableStateFlow(0.35f)
     val notificationUnitSize: StateFlow<Float> = _notificationUnitSize.asStateFlow()
 
+    private val _notificationThreshold = MutableStateFlow(0L)
+    val notificationThreshold: StateFlow<Long> = _notificationThreshold.asStateFlow()
+
+    private val _notificationLowTrafficMode = MutableStateFlow(0)
+    val notificationLowTrafficMode: StateFlow<Int> = _notificationLowTrafficMode.asStateFlow()
+
     private val _isHideFromRecents = MutableStateFlow(false)
     val isHideFromRecents: StateFlow<Boolean> = _isHideFromRecents.asStateFlow()
 
@@ -121,6 +127,9 @@ class NetworkRepository(
             _isHideFromRecents.value = dataStoreRepository.isHideFromRecents.first()
             _isOverlayUseDefaultColors.value = dataStoreRepository.isOverlayUseDefaultColors.first()
             _isAutoStartServiceEnabled.value = dataStoreRepository.isAutoStartServiceEnabled.first()
+            _notificationThreshold.value = dataStoreRepository.notificationThreshold.first()
+            _notificationLowTrafficMode.value =
+                dataStoreRepository.notificationLowTrafficMode.first()
         }
         scope.launch {
             dataStoreRepository.isLiveUpdateEnabled.collect { _isLiveUpdateEnabled.value = it }
@@ -197,6 +206,16 @@ class NetworkRepository(
         scope.launch {
             dataStoreRepository.isAutoStartServiceEnabled.collect {
                 _isAutoStartServiceEnabled.value = it
+            }
+        }
+        scope.launch {
+            dataStoreRepository.notificationThreshold.collect {
+                _notificationThreshold.value = it
+            }
+        }
+        scope.launch {
+            dataStoreRepository.notificationLowTrafficMode.collect {
+                _notificationLowTrafficMode.value = it
             }
         }
     }
@@ -283,6 +302,14 @@ class NetworkRepository(
 
     fun setAutoStartServiceEnabled(enabled: Boolean) {
         scope.launch { dataStoreRepository.setAutoStartServiceEnabled(enabled) }
+    }
+
+    fun setNotificationThreshold(threshold: Long) {
+        scope.launch { dataStoreRepository.setNotificationThreshold(threshold) }
+    }
+
+    fun setNotificationLowTrafficMode(mode: Int) {
+        scope.launch { dataStoreRepository.setNotificationLowTrafficMode(mode) }
     }
 
     suspend fun getOverlayPosition(): Pair<Int, Int> {

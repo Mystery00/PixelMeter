@@ -68,6 +68,7 @@ import me.zhanghai.compose.preference.TextFieldPreference
 import me.zhanghai.compose.preference.TwoTargetPreference
 import vip.mystery0.pixel.meter.BuildConfig
 import vip.mystery0.pixel.meter.R
+import vip.mystery0.pixel.meter.data.repository.NetworkRepository
 import vip.mystery0.pixel.meter.ui.theme.PixelPulseTheme
 import java.util.Locale
 
@@ -428,6 +429,7 @@ fun NotificationSection(viewModel: SettingsViewModel) {
             title = { Text(stringResource(R.string.settings_notification_text_size)) },
             valueText = { Text("%.2f".format(textSize)) }
         )
+
         SliderPreference(
             enabled = !isLiveUpdateEnabled,
             value = 0F,
@@ -437,6 +439,90 @@ fun NotificationSection(viewModel: SettingsViewModel) {
             valueRange = 0.1f..1.0f,
             title = { Text(stringResource(R.string.settings_notification_unit_size)) },
             valueText = { Text("%.2f".format(unitSize)) }
+        )
+
+        // Threshold Settings
+        val threshold by viewModel.notificationThreshold.collectAsState(initial = 0L)
+        val lowTrafficMode by viewModel.notificationLowTrafficMode.collectAsState(initial = 0)
+
+        SliderPreference(
+            value = 0F,
+            onValueChange = { },
+            sliderValue = threshold.toFloat() / 1024,
+            onSliderValueChange = { viewModel.setNotificationThreshold((it * 1024).toLong()) },
+            valueRange = 0f..1024f, // 0KB to 1024KB (1MB)
+            valueSteps = 20, // 50KB steps roughly
+            title = { Text(stringResource(R.string.settings_notification_threshold)) },
+            summary = {
+                if (threshold == 0L) {
+                    Text(stringResource(R.string.settings_notification_threshold_disabled))
+                } else {
+                    val thresholdStr =
+                        NetworkRepository.formatSpeedLine(
+                            threshold
+                        )
+                    Text(
+                        stringResource(
+                            R.string.settings_notification_threshold_desc,
+                            thresholdStr
+                        )
+                    )
+                }
+            },
+            valueText = {
+                Text(
+                    NetworkRepository.formatSpeedLine(
+                        threshold
+                    )
+                )
+            }
+        )
+
+        TextFieldPreference(
+            value = (threshold / 1024).toString(),
+            onValueChange = {
+                val kb = it.toLongOrNull()
+                if (kb != null && kb >= 0) {
+                    viewModel.setNotificationThreshold(kb * 1024)
+                }
+            },
+            title = { Text(stringResource(R.string.settings_notification_threshold_input_title)) },
+            summary = { Text(stringResource(R.string.settings_notification_threshold_input_summary)) },
+            textToValue = { it },
+        )
+
+        val labelStatic = stringResource(R.string.settings_notification_low_traffic_mode_static)
+        val labelDynamic = stringResource(R.string.settings_notification_low_traffic_mode_dynamic)
+        val lowTrafficModeLabel = when (lowTrafficMode) {
+            1 -> labelDynamic
+            else -> labelStatic
+        }
+
+        ListPreference(
+            value = lowTrafficModeLabel,
+            onValueChange = {
+                val mode = when (it) {
+                    labelDynamic -> 1
+                    else -> 0
+                }
+                viewModel.setNotificationLowTrafficMode(mode)
+            },
+            title = { Text(stringResource(R.string.settings_notification_low_traffic_mode)) },
+            values = listOf(
+                labelStatic,
+                labelDynamic
+            ),
+            summary = {
+                Column {
+                    Text(lowTrafficModeLabel)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.settings_notification_low_traffic_mode_explanation),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         )
     }
 }

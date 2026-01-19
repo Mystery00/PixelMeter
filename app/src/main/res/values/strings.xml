@@ -58,6 +58,15 @@
     <string name="settings_display_mode_download">Download Only</string>
     <string name="settings_notification_text_size">Icon Number Size</string>
     <string name="settings_notification_unit_size">Icon Unit Size</string>
+    <string name="settings_notification_threshold">Notification Threshold</string>
+    <string name="settings_notification_threshold_desc">When speed is below threshold (%1$s), show low traffic mode</string>
+    <string name="settings_notification_threshold_disabled">Low traffic mode is disabled</string>
+    <string name="settings_notification_threshold_input_title">Custom Threshold (KB/s)</string>
+    <string name="settings_notification_threshold_input_summary">Input the threshold value in KB/s directly</string>
+    <string name="settings_notification_low_traffic_mode">Action Below Threshold</string>
+    <string name="settings_notification_low_traffic_mode_static">Show Static Icon</string>
+    <string name="settings_notification_low_traffic_mode_dynamic">Show Dynamic Speed</string>
+    <string name="settings_notification_low_traffic_mode_explanation">Static: Show app icon.\nDynamic: Show speed (e.g., 0K/s).\nNote: Changes may take 2 cycles to apply.</string>
     <string name="settings_category_background">Background Settings</string>
     <string name="settings_ignore_battery_optimizations_title">Ignore Battery Optimizations</string>
     <string name="settings_ignore_battery_optimizations_on">Optimizations Ignored</string>
@@ -80,6 +89,7 @@
     <string name="notification_channel_name">Network Monitor Service</string>
     <string name="notification_content_title">Network Speed Monitor</string>
     <string name="notification_content_text">Monitoring in background…</string>
+    <string name="notification_content_text_monitoring">Monitoring…</string>
 
     <string name="tile_overlay_label">Overlay</string>
     <string name="tile_notification_label">Notification</string>

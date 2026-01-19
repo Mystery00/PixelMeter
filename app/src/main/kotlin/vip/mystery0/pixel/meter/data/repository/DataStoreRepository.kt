@@ -46,6 +46,9 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
         val KEY_HIDE_FROM_RECENTS = booleanPreferencesKey("key_hide_from_recents")
         val KEY_OVERLAY_USE_DEFAULT_COLORS = booleanPreferencesKey("key_overlay_use_default_colors")
         val KEY_AUTO_START_SERVICE = booleanPreferencesKey("key_auto_start_service")
+        val KEY_NOTIFICATION_THRESHOLD = longPreferencesKey("key_notification_threshold")
+        val KEY_NOTIFICATION_LOW_TRAFFIC_MODE =
+            intPreferencesKey("key_notification_low_traffic_mode")
     }
 
     val isLiveUpdateEnabled: Flow<Boolean> = dataStore.data
@@ -149,6 +152,16 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     val notificationUnitSize: Flow<Float> = dataStore.data
         .map { preferences ->
             preferences[KEY_NOTIFICATION_UNIT_SIZE] ?: 0.35f
+        }
+
+    val notificationThreshold: Flow<Long> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_NOTIFICATION_THRESHOLD] ?: 0L
+        }
+
+    val notificationLowTrafficMode: Flow<Int> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_NOTIFICATION_LOW_TRAFFIC_MODE] ?: 0 // 0: Static, 1: Dynamic
         }
 
     suspend fun setLiveUpdateEnabled(enabled: Boolean) {
@@ -263,6 +276,18 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun setNotificationUnitSize(size: Float) {
         dataStore.edit { preferences ->
             preferences[KEY_NOTIFICATION_UNIT_SIZE] = size
+        }
+    }
+
+    suspend fun setNotificationThreshold(threshold: Long) {
+        dataStore.edit { preferences ->
+            preferences[KEY_NOTIFICATION_THRESHOLD] = threshold
+        }
+    }
+
+    suspend fun setNotificationLowTrafficMode(mode: Int) {
+        dataStore.edit { preferences ->
+            preferences[KEY_NOTIFICATION_LOW_TRAFFIC_MODE] = mode
         }
     }
 

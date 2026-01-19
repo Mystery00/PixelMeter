@@ -57,7 +57,9 @@ class NetworkMonitorService : Service() {
             upFirst = true,
             displayMode = 0,
             textSize = 0.65f,
-            unitSize = 0.35f
+            unitSize = 0.35f,
+            threshold = 0L,
+            lowTrafficMode = 1
         )
 
         try {
@@ -124,11 +126,13 @@ class NetworkMonitorService : Service() {
                     val displayMode = repository.notificationDisplayMode.value
                     val textSize = repository.notificationTextSize.value
                     val unitSize = repository.notificationUnitSize.value
+                    val threshold = repository.notificationThreshold.value
+                    val lowTrafficMode = repository.notificationLowTrafficMode.value
 
                     notificationHelper.buildNotification(
                         speed, isLiveUpdate, isNotificationEnabled,
                         textUp, textDown, upFirst, displayMode,
-                        textSize, unitSize
+                        textSize, unitSize, threshold, lowTrafficMode
                     )
                 }
                 notificationManager.notify(NotificationHelper.NOTIFICATION_ID, notification)

@@ -57,6 +57,15 @@
     <string name="settings_display_mode_download">仅显示下行网速</string>
     <string name="settings_notification_text_size">图标数字大小</string>
     <string name="settings_notification_unit_size">图标单位大小</string>
+    <string name="settings_notification_threshold">网速通知阈值</string>
+    <string name="settings_notification_threshold_desc">当网速低于阈值 (%1$s) 时，进入低流量模式</string>
+    <string name="settings_notification_threshold_disabled">低流量模式已禁用</string>
+    <string name="settings_notification_threshold_input_title">精准阈值设置 (KB/s)</string>
+    <string name="settings_notification_threshold_input_summary">直接输入阈值数值，单位为 KB/s</string>
+    <string name="settings_notification_low_traffic_mode">低流量模式动作</string>
+    <string name="settings_notification_low_traffic_mode_static">显示静态图标</string>
+    <string name="settings_notification_low_traffic_mode_dynamic">显示动态网速</string>
+    <string name="settings_notification_low_traffic_mode_explanation">静态：显示应用图标。\n动态：显示实时网速(如 0K/s)。\n注意：切换此选项需等待两个统计周期生效。</string>
     <string name="settings_category_background">后台配置</string>
     <string name="settings_ignore_battery_optimizations_title">忽略电池优化</string>
     <string name="settings_ignore_battery_optimizations_on">已忽略优化</string>
@@ -79,6 +88,7 @@
     <string name="notification_channel_name">网速显示服务</string>
     <string name="notification_content_title">网速显示</string>
     <string name="notification_content_text">正在运行…</string>
+    <string name="notification_content_text_monitoring">监听中…</string>
 
     <string name="tile_overlay_label">悬浮窗</string>
     <string name="tile_notification_label">通知栏显示</string>

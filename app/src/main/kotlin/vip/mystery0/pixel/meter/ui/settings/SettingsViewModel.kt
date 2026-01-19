@@ -48,6 +48,8 @@ class SettingsViewModel(
     val notificationDisplayMode = repository.notificationDisplayMode
     val notificationTextSize = repository.notificationTextSize
     val notificationUnitSize = repository.notificationUnitSize
+    val notificationThreshold = repository.notificationThreshold
+    val notificationLowTrafficMode = repository.notificationLowTrafficMode
 
     // General Settings
     val samplingInterval = repository.samplingInterval
@@ -113,6 +115,8 @@ class SettingsViewModel(
     fun setNotificationUnitSize(size: Float) = repository.setNotificationUnitSize(size)
     fun setOverlayUseDefaultColors(useDefault: Boolean) =
         repository.setOverlayUseDefaultColors(useDefault)
+    fun setNotificationThreshold(threshold: Long) = repository.setNotificationThreshold(threshold)
+    fun setNotificationLowTrafficMode(mode: Int) = repository.setNotificationLowTrafficMode(mode)
 
     fun setAutoStartServiceEnabled(enabled: Boolean) =
         repository.setAutoStartServiceEnabled(enabled)

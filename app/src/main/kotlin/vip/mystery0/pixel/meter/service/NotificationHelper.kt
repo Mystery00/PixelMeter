@@ -84,8 +84,11 @@ class NotificationHelper(private val context: Context) {
         upFirst: Boolean,
         displayMode: Int,
         textSize: Float = 0.65f,
-        unitSize: Float = 0.35f
+        unitSize: Float = 0.35f,
+        threshold: Long = 0L,
+        lowTrafficMode: Int = 0 // 0: Static, 1: Dynamic
     ): Notification {
+        var shouldLiveUpdate = isLiveUpdate
         val intent = Intent().apply {
             setClassName(context, MainActivity::class.java.name)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -114,8 +117,22 @@ class NotificationHelper(private val context: Context) {
                 .build()
         }
 
+        // Logic for Threshold Check
+        // If speed is below threshold AND user selected Static Mode (0), show static icon
+        if (speed.totalSpeed < threshold) {
+            if (lowTrafficMode == 0) {
+                return builder
+                    .setContentTitle(context.getString(R.string.notification_content_title))
+                    .setContentText(context.getString(R.string.notification_content_text_monitoring))
+                    .setSmallIcon(R.drawable.ic_speed)
+                    .build()
+            } else {
+                shouldLiveUpdate = false
+            }
+        }
+
         // Notification Enabled (Dynamic Mode)
-        if (isLiveUpdate) {
+        if (shouldLiveUpdate) {
             // Live Update Mode
             val statusText = NetworkRepository.formatSpeedTextForLiveUpdate(speed.totalSpeed)
             val upText = "$textUp${NetworkRepository.formatSpeedLine(speed.uploadSpeed)}"
