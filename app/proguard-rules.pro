@@ -1,26 +1,15 @@
--optimizationpasses 5
--dontusemixedcaseclassnames
--verbose
--optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+# Add project specific ProGuard rules here.
+# You can use the generated configuration data with the -printconfiguration directive.
 
--keepattributes *Annotation*
+# Keep Kotlin metadata (essential for Kotlin reflection and some libraries)
+-keepattributes RuntimeVisibleAnnotations,AnnotationDefault,Signature
 
--ignorewarnings
-
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
--keep public class * extends android.app.backup.BackupAgentHelper
--keep public class * extends android.preference.Preference
-
+# Keep Parcelable CREATOR fields (often needed if not fully handled by plugin)
 -keep class * implements android.os.Parcelable {
   public static final android.os.Parcelable$Creator *;
 }
 
--keepnames class * implements java.io.Serializable
-
+# Keep Serializable members if used
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
     private static final java.io.ObjectStreamField[] serialPersistentFields;
@@ -33,11 +22,9 @@
     java.lang.Object readResolve();
 }
 
--keepclassmembers class **.R$* {
-    public static <fields>;
-}
+# Retain generic type signatures (optional, but often helpful for libraries relying on generics)
+-keepattributes Signature
 
--keep class vip.mystery0.pixel.meter.** { *; }
-
+# Third-party library specific rules (if any needed that aren't in their own consumer-rules.pro)
 -dontwarn androidx.window.extensions.**
 -dontwarn androidx.window.sidecar.**
