@@ -1,9 +1,10 @@
-* **Optimization: Service Compliance (优化：服务合规)**
-  * **Android 14+ Adaptation**: Dynamically switch Foreground Service type to `specialUse` to comply
-    with Boot restrictions; maintain `dataSync` for legacy compatibility.
-  * **Android 14+ 适配**: 动态调整前台服务类型，在 Android 14+ 使用 `specialUse` 以符合开机自启规范，旧版本保持
-    `dataSync` 兼容，修复运行时崩溃。
+* **Feature: Notification (功能：通知)**
+  * **Low Traffic Mode**: Added support for hiding notification or showing specific content when
+    traffic is low.
+  * **低流量模式**: 支持低流量模式与阈值设置，可自定义网速低于阈值时的显示行为。
 
-* **Optimization: UI (优化：界面)**
-  * **Settings Page**: Optimized the display logic and visual effects of settings items.
-  * **设置页**: 优化了设置项的显示逻辑与视觉效果。
+* **UI: Visuals (界面：视觉)**
+  * **App Icon**: Updated app icon and added Monochrome Icon support.
+  * **应用图标**: 更新应用图标设计，适配系统单色图标。
+  * **Splash Screen**: Configured Splash Screen background to match brand color.
+  * **启动页**: 配置启动页背景色与品牌色一致。
