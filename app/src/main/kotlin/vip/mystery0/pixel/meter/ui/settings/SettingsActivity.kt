@@ -524,6 +524,24 @@ fun NotificationSection(viewModel: SettingsViewModel) {
                 }
             }
         )
+
+        // Notification Color Settings
+        val useCustomColor by viewModel.notificationUseCustomColor.collectAsState(initial = false)
+        val notificationColor by viewModel.notificationColor.collectAsState(initial = 0)
+
+        SwitchPreference(
+            value = useCustomColor,
+            onValueChange = { viewModel.setNotificationUseCustomColor(it) },
+            title = { Text(stringResource(R.string.settings_notification_use_custom_color_title)) },
+            summary = { Text(stringResource(R.string.settings_notification_use_custom_color_desc)) }
+        )
+
+        ColorPreference(
+            title = stringResource(R.string.settings_notification_color_title),
+            color = Color(notificationColor),
+            enabled = useCustomColor,
+            onColorSelected = { viewModel.setNotificationColor(it.toArgb()) }
+        )
     }
 }
 

@@ -128,11 +128,14 @@ class NetworkMonitorService : Service() {
                     val unitSize = repository.notificationUnitSize.value
                     val threshold = repository.notificationThreshold.value
                     val lowTrafficMode = repository.notificationLowTrafficMode.value
+                    val useCustomColor = repository.notificationUseCustomColor.value
+                    val color = repository.notificationColor.value
 
                     notificationHelper.buildNotification(
                         speed, isLiveUpdate, isNotificationEnabled,
                         textUp, textDown, upFirst, displayMode,
-                        textSize, unitSize, threshold, lowTrafficMode
+                        textSize, unitSize, threshold, lowTrafficMode,
+                        useCustomColor, color
                     )
                 }
                 notificationManager.notify(NotificationHelper.NOTIFICATION_ID, notification)

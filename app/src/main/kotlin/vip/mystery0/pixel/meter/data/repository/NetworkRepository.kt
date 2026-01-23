@@ -88,6 +88,12 @@ class NetworkRepository(
     private val _notificationLowTrafficMode = MutableStateFlow(0)
     val notificationLowTrafficMode: StateFlow<Int> = _notificationLowTrafficMode.asStateFlow()
 
+    private val _notificationUseCustomColor = MutableStateFlow(false)
+    val notificationUseCustomColor: StateFlow<Boolean> = _notificationUseCustomColor.asStateFlow()
+
+    private val _notificationColor = MutableStateFlow(0)
+    val notificationColor: StateFlow<Int> = _notificationColor.asStateFlow()
+
     private val _isHideFromRecents = MutableStateFlow(false)
     val isHideFromRecents: StateFlow<Boolean> = _isHideFromRecents.asStateFlow()
 
@@ -130,6 +136,9 @@ class NetworkRepository(
             _notificationThreshold.value = dataStoreRepository.notificationThreshold.first()
             _notificationLowTrafficMode.value =
                 dataStoreRepository.notificationLowTrafficMode.first()
+            _notificationUseCustomColor.value =
+                dataStoreRepository.notificationUseCustomColor.first()
+            _notificationColor.value = dataStoreRepository.notificationColor.first()
         }
         scope.launch {
             dataStoreRepository.isLiveUpdateEnabled.collect { _isLiveUpdateEnabled.value = it }
@@ -216,6 +225,16 @@ class NetworkRepository(
         scope.launch {
             dataStoreRepository.notificationLowTrafficMode.collect {
                 _notificationLowTrafficMode.value = it
+            }
+        }
+        scope.launch {
+            dataStoreRepository.notificationUseCustomColor.collect {
+                _notificationUseCustomColor.value = it
+            }
+        }
+        scope.launch {
+            dataStoreRepository.notificationColor.collect {
+                _notificationColor.value = it
             }
         }
     }
@@ -310,6 +329,14 @@ class NetworkRepository(
 
     fun setNotificationLowTrafficMode(mode: Int) {
         scope.launch { dataStoreRepository.setNotificationLowTrafficMode(mode) }
+    }
+
+    fun setNotificationUseCustomColor(useCustom: Boolean) {
+        scope.launch { dataStoreRepository.setNotificationUseCustomColor(useCustom) }
+    }
+
+    fun setNotificationColor(color: Int) {
+        scope.launch { dataStoreRepository.setNotificationColor(color) }
     }
 
     suspend fun getOverlayPosition(): Pair<Int, Int> {

@@ -86,7 +86,9 @@ class NotificationHelper(private val context: Context) {
         textSize: Float = 0.65f,
         unitSize: Float = 0.35f,
         threshold: Long = 0L,
-        lowTrafficMode: Int = 0 // 0: Static, 1: Dynamic
+        lowTrafficMode: Int = 0, // 0: Static, 1: Dynamic
+        useCustomColor: Boolean = false,
+        color: Int = 0
     ): Notification {
         var shouldLiveUpdate = isLiveUpdate
         val intent = Intent().apply {
@@ -107,6 +109,10 @@ class NotificationHelper(private val context: Context) {
             .setContentIntent(pendingIntent)
             .setVisibility(NotificationCompat.VISIBILITY_SECRET)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
+
+        if (useCustomColor) {
+            builder.setColor(color)
+        }
 
         if (!isNotificationEnabled) {
             // Notification Disabled (Static Mode)

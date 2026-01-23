@@ -49,6 +49,9 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
         val KEY_NOTIFICATION_THRESHOLD = longPreferencesKey("key_notification_threshold")
         val KEY_NOTIFICATION_LOW_TRAFFIC_MODE =
             intPreferencesKey("key_notification_low_traffic_mode")
+        val KEY_NOTIFICATION_USE_CUSTOM_COLOR =
+            booleanPreferencesKey("key_notification_use_custom_color")
+        val KEY_NOTIFICATION_COLOR = intPreferencesKey("key_notification_color")
     }
 
     val isLiveUpdateEnabled: Flow<Boolean> = dataStore.data
@@ -162,6 +165,16 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     val notificationLowTrafficMode: Flow<Int> = dataStore.data
         .map { preferences ->
             preferences[KEY_NOTIFICATION_LOW_TRAFFIC_MODE] ?: 0 // 0: Static, 1: Dynamic
+        }
+
+    val notificationUseCustomColor: Flow<Boolean> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_NOTIFICATION_USE_CUSTOM_COLOR] ?: false
+        }
+
+    val notificationColor: Flow<Int> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_NOTIFICATION_COLOR] ?: 0
         }
 
     suspend fun setLiveUpdateEnabled(enabled: Boolean) {
@@ -288,6 +301,18 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun setNotificationLowTrafficMode(mode: Int) {
         dataStore.edit { preferences ->
             preferences[KEY_NOTIFICATION_LOW_TRAFFIC_MODE] = mode
+        }
+    }
+
+    suspend fun setNotificationUseCustomColor(useCustom: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[KEY_NOTIFICATION_USE_CUSTOM_COLOR] = useCustom
+        }
+    }
+
+    suspend fun setNotificationColor(color: Int) {
+        dataStore.edit { preferences ->
+            preferences[KEY_NOTIFICATION_COLOR] = color
         }
     }
 
