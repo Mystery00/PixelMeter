@@ -2,6 +2,7 @@ package vip.mystery0.pixel.meter.ui.overlay
 
 import android.content.Context
 import android.graphics.PixelFormat
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -148,7 +149,11 @@ class OverlayWindow(
 
     fun hide() {
         if (view != null) {
-            windowManager.removeView(view)
+            try {
+                windowManager.removeView(view)
+            } catch (e: Exception) {
+                Log.w("OverlayWindow", "removeView failed", e)
+            }
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
