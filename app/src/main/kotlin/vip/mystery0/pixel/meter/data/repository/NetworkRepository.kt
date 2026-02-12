@@ -111,34 +111,51 @@ class NetworkRepository(
     private var lastTime = 0L
 
     init {
+        // 单次文件 IO 批量读取所有偏好设置，避免多次 first() 重复触发 DataStore 读取
         runBlocking {
-            _isLiveUpdateEnabled.value = dataStoreRepository.isLiveUpdateEnabled.first()
-            _isNotificationEnabled.value = dataStoreRepository.isNotificationEnabled.first()
-            _isOverlayLocked.value = dataStoreRepository.isOverlayLocked.first()
-            _isOverlayEnabled.value = dataStoreRepository.isOverlayEnabled.first()
-            _samplingInterval.value = dataStoreRepository.samplingInterval.first()
-            _overlayBgColor.value = dataStoreRepository.overlayBgColor.first()
-            _overlayTextColor.value = dataStoreRepository.overlayTextColor.first()
-            _overlayCornerRadius.value = dataStoreRepository.overlayCornerRadius.first()
-            _overlayTextSize.value = dataStoreRepository.overlayTextSize.first()
-            _overlayTextUp.value = dataStoreRepository.overlayTextUp.first()
-            _overlayTextDown.value = dataStoreRepository.overlayTextDown.first()
-            _overlayOrderUpFirst.value = dataStoreRepository.overlayOrderUpFirst.first()
-            _notificationTextUp.value = dataStoreRepository.notificationTextUp.first()
-            _notificationTextDown.value = dataStoreRepository.notificationTextDown.first()
-            _notificationOrderUpFirst.value = dataStoreRepository.notificationOrderUpFirst.first()
-            _notificationDisplayMode.value = dataStoreRepository.notificationDisplayMode.first()
-            _notificationTextSize.value = dataStoreRepository.notificationTextSize.first()
-            _notificationUnitSize.value = dataStoreRepository.notificationUnitSize.first()
-            _isHideFromRecents.value = dataStoreRepository.isHideFromRecents.first()
-            _isOverlayUseDefaultColors.value = dataStoreRepository.isOverlayUseDefaultColors.first()
-            _isAutoStartServiceEnabled.value = dataStoreRepository.isAutoStartServiceEnabled.first()
-            _notificationThreshold.value = dataStoreRepository.notificationThreshold.first()
-            _notificationLowTrafficMode.value =
-                dataStoreRepository.notificationLowTrafficMode.first()
-            _notificationUseCustomColor.value =
-                dataStoreRepository.notificationUseCustomColor.first()
-            _notificationColor.value = dataStoreRepository.notificationColor.first()
+            dataStoreRepository.allPreferences.first().let { prefs ->
+                _isLiveUpdateEnabled.value = prefs[DataStoreRepository.KEY_LIVE_UPDATE] ?: false
+                _isNotificationEnabled.value =
+                    prefs[DataStoreRepository.KEY_NOTIFICATION_ENABLED] ?: true
+                _isOverlayLocked.value = prefs[DataStoreRepository.KEY_OVERLAY_LOCKED] ?: false
+                _isOverlayEnabled.value = prefs[DataStoreRepository.KEY_OVERLAY_ENABLED] ?: false
+                _samplingInterval.value = prefs[DataStoreRepository.KEY_SAMPLING_INTERVAL] ?: 1500L
+                _overlayBgColor.value =
+                    prefs[DataStoreRepository.KEY_OVERLAY_BG_COLOR] ?: 0xCC000000.toInt()
+                _overlayTextColor.value =
+                    prefs[DataStoreRepository.KEY_OVERLAY_TEXT_COLOR] ?: 0xFFFFFFFF.toInt()
+                _overlayCornerRadius.value =
+                    prefs[DataStoreRepository.KEY_OVERLAY_CORNER_RADIUS] ?: 8
+                _overlayTextSize.value = prefs[DataStoreRepository.KEY_OVERLAY_TEXT_SIZE] ?: 10f
+                _overlayTextUp.value = prefs[DataStoreRepository.KEY_OVERLAY_TEXT_UP] ?: "▲ "
+                _overlayTextDown.value = prefs[DataStoreRepository.KEY_OVERLAY_TEXT_DOWN] ?: "▼ "
+                _overlayOrderUpFirst.value =
+                    prefs[DataStoreRepository.KEY_OVERLAY_ORDER_UP_FIRST] ?: true
+                _notificationTextUp.value =
+                    prefs[DataStoreRepository.KEY_NOTIFICATION_TEXT_UP] ?: "▲ "
+                _notificationTextDown.value =
+                    prefs[DataStoreRepository.KEY_NOTIFICATION_TEXT_DOWN] ?: "▼ "
+                _notificationOrderUpFirst.value =
+                    prefs[DataStoreRepository.KEY_NOTIFICATION_ORDER_UP_FIRST] ?: true
+                _notificationDisplayMode.value =
+                    prefs[DataStoreRepository.KEY_NOTIFICATION_DISPLAY_MODE] ?: 0
+                _notificationTextSize.value =
+                    prefs[DataStoreRepository.KEY_NOTIFICATION_TEXT_SIZE] ?: 0.65f
+                _notificationUnitSize.value =
+                    prefs[DataStoreRepository.KEY_NOTIFICATION_UNIT_SIZE] ?: 0.35f
+                _isHideFromRecents.value = prefs[DataStoreRepository.KEY_HIDE_FROM_RECENTS] ?: false
+                _isOverlayUseDefaultColors.value =
+                    prefs[DataStoreRepository.KEY_OVERLAY_USE_DEFAULT_COLORS] ?: false
+                _isAutoStartServiceEnabled.value =
+                    prefs[DataStoreRepository.KEY_AUTO_START_SERVICE] ?: false
+                _notificationThreshold.value =
+                    prefs[DataStoreRepository.KEY_NOTIFICATION_THRESHOLD] ?: 0L
+                _notificationLowTrafficMode.value =
+                    prefs[DataStoreRepository.KEY_NOTIFICATION_LOW_TRAFFIC_MODE] ?: 0
+                _notificationUseCustomColor.value =
+                    prefs[DataStoreRepository.KEY_NOTIFICATION_USE_CUSTOM_COLOR] ?: false
+                _notificationColor.value = prefs[DataStoreRepository.KEY_NOTIFICATION_COLOR] ?: 0
+            }
         }
         scope.launch {
             dataStoreRepository.isLiveUpdateEnabled.collect { _isLiveUpdateEnabled.value = it }

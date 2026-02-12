@@ -18,6 +18,9 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DAT
 
 class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
 
+    /** 暴露原始 Preferences Flow，供批量读取初始值 */
+    val allPreferences: Flow<Preferences> = dataStore.data
+
     // Keys mapped from legacy SharedPreferences in NetworkRepository.kt
     companion object {
         val KEY_LIVE_UPDATE = booleanPreferencesKey("key_live_update")
