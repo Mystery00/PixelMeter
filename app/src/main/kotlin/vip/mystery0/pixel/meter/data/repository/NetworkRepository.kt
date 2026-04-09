@@ -34,6 +34,9 @@ class NetworkRepository(
     private val _isOverlayLocked = MutableStateFlow(false)
     val isOverlayLocked: StateFlow<Boolean> = _isOverlayLocked.asStateFlow()
 
+    private val _isOverlayShowOnStatusBar = MutableStateFlow(false)
+    val isOverlayShowOnStatusBar: StateFlow<Boolean> = _isOverlayShowOnStatusBar.asStateFlow()
+
     private val _isMonitoring = MutableStateFlow(false)
     val isMonitoring: StateFlow<Boolean> = _isMonitoring.asStateFlow()
 
@@ -121,6 +124,8 @@ class NetworkRepository(
                 _isNotificationEnabled.value =
                     prefs[DataStoreRepository.KEY_NOTIFICATION_ENABLED] ?: true
                 _isOverlayLocked.value = prefs[DataStoreRepository.KEY_OVERLAY_LOCKED] ?: false
+                _isOverlayShowOnStatusBar.value =
+                    prefs[DataStoreRepository.KEY_OVERLAY_SHOW_ON_STATUS_BAR] ?: false
                 _isOverlayEnabled.value = prefs[DataStoreRepository.KEY_OVERLAY_ENABLED] ?: false
                 _samplingInterval.value = prefs[DataStoreRepository.KEY_SAMPLING_INTERVAL] ?: 1500L
                 _overlayBgColor.value =
@@ -169,6 +174,11 @@ class NetworkRepository(
         }
         scope.launch {
             dataStoreRepository.isOverlayLocked.collect { _isOverlayLocked.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.isOverlayShowOnStatusBar.collect {
+                _isOverlayShowOnStatusBar.value = it
+            }
         }
         scope.launch {
             dataStoreRepository.isOverlayEnabled.collect { _isOverlayEnabled.value = it }
@@ -279,6 +289,10 @@ class NetworkRepository(
 
     fun setOverlayLocked(locked: Boolean) {
         scope.launch { dataStoreRepository.setOverlayLocked(locked) }
+    }
+
+    fun setOverlayShowOnStatusBar(show: Boolean) {
+        scope.launch { dataStoreRepository.setOverlayShowOnStatusBar(show) }
     }
 
     fun setSamplingInterval(interval: Long) {

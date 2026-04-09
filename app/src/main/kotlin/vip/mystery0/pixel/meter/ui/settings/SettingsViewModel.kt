@@ -38,6 +38,7 @@ class SettingsViewModel(
     val overlayTextDown = repository.overlayTextDown
     val overlayOrderUpFirst = repository.overlayOrderUpFirst
     val isOverlayLocked = repository.isOverlayLocked
+    val isOverlayShowOnStatusBar = repository.isOverlayShowOnStatusBar
 
     // Notification Settings
     val isNotificationEnabled = repository.isNotificationEnabled
@@ -95,6 +96,7 @@ class SettingsViewModel(
 
     fun setOverlayEnabled(enabled: Boolean) = repository.setOverlayEnabled(enabled)
     fun setOverlayLocked(locked: Boolean) = repository.setOverlayLocked(locked)
+    fun setOverlayShowOnStatusBar(show: Boolean) = repository.setOverlayShowOnStatusBar(show)
 
     fun setSamplingInterval(interval: Long) = repository.setSamplingInterval(interval)
     fun setHideFromRecents(hide: Boolean) = repository.setHideFromRecents(hide)

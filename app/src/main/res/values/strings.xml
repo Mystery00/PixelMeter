@@ -40,6 +40,8 @@
     <string name="settings_category_overlay">Floating Window Settings</string>
     <string name="settings_lock_overlay">Lock Floating Window</string>
     <string name="config_lock_overlay_desc">Prevent window from being moved</string>
+    <string name="settings_overlay_show_on_status_bar">Show Over Status Bar</string>
+    <string name="settings_overlay_show_on_status_bar_desc">Allow the floating window to be dragged over the status bar and notch area</string>
     <string name="settings_overlay_use_default_colors">Use Default Colors</string>
     <string name="settings_overlay_use_default_colors_desc">Colors will adapt to system theme (Dark/Light)</string>
     <string name="settings_overlay_bg_color">Background Color</string>

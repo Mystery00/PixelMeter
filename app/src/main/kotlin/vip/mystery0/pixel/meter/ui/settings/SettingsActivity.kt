@@ -279,6 +279,7 @@ fun OverlaySection(viewModel: SettingsViewModel) {
 
     val isEnabled by viewModel.isOverlayEnabled.collectAsState(initial = false)
     val isLocked by viewModel.isOverlayLocked.collectAsState(initial = false)
+    val isOverlayShowOnStatusBar by viewModel.isOverlayShowOnStatusBar.collectAsState(initial = false)
     val isOverlayUseDefaultColors by viewModel.isOverlayUseDefaultColors.collectAsState(initial = false)
     val bgColor by viewModel.overlayBgColor.collectAsState(initial = 0)
     val textColor by viewModel.overlayTextColor.collectAsState(initial = 0)
@@ -309,6 +310,12 @@ fun OverlaySection(viewModel: SettingsViewModel) {
             onValueChange = { viewModel.setOverlayLocked(it) },
             title = { Text(stringResource(R.string.settings_lock_overlay)) },
             summary = { Text(stringResource(R.string.config_lock_overlay_desc)) }
+        )
+        SwitchPreference(
+            value = isOverlayShowOnStatusBar,
+            onValueChange = { viewModel.setOverlayShowOnStatusBar(it) },
+            title = { Text(stringResource(R.string.settings_overlay_show_on_status_bar)) },
+            summary = { Text(stringResource(R.string.settings_overlay_show_on_status_bar_desc)) }
         )
         SwitchPreference(
             value = isOverlayUseDefaultColors,

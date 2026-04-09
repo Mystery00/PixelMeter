@@ -2,6 +2,7 @@ package vip.mystery0.pixel.meter.ui.overlay
 
 import android.content.Context
 import android.graphics.PixelFormat
+import android.os.Build
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -15,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -78,18 +80,26 @@ class OverlayWindow(
         lifecycleScope.launch {
             val (initialX, initialY) = repository.getOverlayPosition()
 
+            val isShowOnStatusBarInitially = repository.isOverlayShowOnStatusBar.value
+            val extraFlags =
+                if (isShowOnStatusBarInitially) WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS else 0
+
             params = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                         WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or extraFlags,
                 PixelFormat.TRANSLUCENT
             ).apply {
                 gravity = Gravity.TOP or Gravity.START
                 x = initialX
                 y = initialY
+                if (isShowOnStatusBarInitially && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    layoutInDisplayCutoutMode =
+                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                }
             }
 
             val composeView = ComposeView(context)
@@ -100,6 +110,7 @@ class OverlayWindow(
             composeView.setContent {
                 PixelPulseTheme {
                     val isLocked by repository.isOverlayLocked.collectAsState()
+                    val isShowOnStatusBar by repository.isOverlayShowOnStatusBar.collectAsState()
                     val bgColor by repository.overlayBgColor.collectAsState()
                     val textColor by repository.overlayTextColor.collectAsState()
                     val cornerRadius by repository.overlayCornerRadius.collectAsState()
@@ -109,6 +120,42 @@ class OverlayWindow(
                     val upFirst by repository.overlayOrderUpFirst.collectAsState()
                     val isOverlayUseDefaultColors by repository.isOverlayUseDefaultColors.collectAsState()
                     val speedUnit by repository.speedUnit.collectAsState()
+
+                    LaunchedEffect(isShowOnStatusBar) {
+                        params?.let { p ->
+                            var changed = false
+                            if (isShowOnStatusBar) {
+                                if ((p.flags and WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) == 0) {
+                                    p.flags =
+                                        p.flags or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                                    changed = true
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                    if (p.layoutInDisplayCutoutMode != WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES) {
+                                        p.layoutInDisplayCutoutMode =
+                                            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                                        changed = true
+                                    }
+                                }
+                            } else {
+                                if ((p.flags and WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) != 0) {
+                                    p.flags =
+                                        p.flags and WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS.inv()
+                                    changed = true
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                    if (p.layoutInDisplayCutoutMode != WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT) {
+                                        p.layoutInDisplayCutoutMode =
+                                            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
+                                        changed = true
+                                    }
+                                }
+                            }
+                            if (changed) {
+                                windowManager.updateViewLayout(composeView, p)
+                            }
+                        }
+                    }
 
                     OverlayContent(
                         speed = speedState,

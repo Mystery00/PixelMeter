@@ -27,6 +27,7 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
         val KEY_NOTIFICATION_ENABLED = booleanPreferencesKey("key_notification_enabled")
         val KEY_OVERLAY_ENABLED = booleanPreferencesKey("key_overlay_enabled")
         val KEY_OVERLAY_LOCKED = booleanPreferencesKey("key_overlay_locked")
+        val KEY_OVERLAY_SHOW_ON_STATUS_BAR = booleanPreferencesKey("key_overlay_show_on_status_bar")
         val KEY_OVERLAY_X = intPreferencesKey("key_overlay_x")
         val KEY_OVERLAY_Y = intPreferencesKey("key_overlay_y")
 
@@ -77,6 +78,11 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     val isOverlayLocked: Flow<Boolean> = dataStore.data
         .map { preferences ->
             preferences[KEY_OVERLAY_LOCKED] ?: false
+        }
+
+    val isOverlayShowOnStatusBar: Flow<Boolean> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_OVERLAY_SHOW_ON_STATUS_BAR] ?: false
         }
 
     val overlayX: Flow<Int> = dataStore.data
@@ -202,6 +208,12 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun setOverlayLocked(locked: Boolean) {
         dataStore.edit { preferences ->
             preferences[KEY_OVERLAY_LOCKED] = locked
+        }
+    }
+
+    suspend fun setOverlayShowOnStatusBar(show: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[KEY_OVERLAY_SHOW_ON_STATUS_BAR] = show
         }
     }
 
