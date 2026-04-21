@@ -57,6 +57,8 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
             booleanPreferencesKey("key_notification_use_custom_color")
         val KEY_NOTIFICATION_COLOR = intPreferencesKey("key_notification_color")
         val KEY_SPEED_UNIT = intPreferencesKey("key_speed_unit")
+        val KEY_OVERLAY_DIRECTION = intPreferencesKey("key_overlay_direction")
+        val KEY_OVERLAY_ALIGNMENT = intPreferencesKey("key_overlay_alignment")
     }
 
     val isLiveUpdateEnabled: Flow<Boolean> = dataStore.data
@@ -135,6 +137,16 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     val overlayOrderUpFirst: Flow<Boolean> = dataStore.data
         .map { preferences ->
             preferences[KEY_OVERLAY_ORDER_UP_FIRST] ?: true // Default TRUE as requested
+        }
+
+    val overlayDirection: Flow<Int> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_OVERLAY_DIRECTION] ?: 0 // 0: Horizontal, 1: Vertical
+        }
+
+    val overlayAlignment: Flow<Int> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_OVERLAY_ALIGNMENT] ?: 0 // 0: Start, 1: Center, 2: End
         }
 
     val notificationTextUp: Flow<String> = dataStore.data
@@ -269,6 +281,18 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun setOverlayOrderUpFirst(upFirst: Boolean) {
         dataStore.edit { preferences ->
             preferences[KEY_OVERLAY_ORDER_UP_FIRST] = upFirst
+        }
+    }
+
+    suspend fun setOverlayDirection(direction: Int) {
+        dataStore.edit { preferences ->
+            preferences[KEY_OVERLAY_DIRECTION] = direction
+        }
+    }
+
+    suspend fun setOverlayAlignment(alignment: Int) {
+        dataStore.edit { preferences ->
+            preferences[KEY_OVERLAY_ALIGNMENT] = alignment
         }
     }
 

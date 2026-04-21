@@ -54,6 +54,13 @@
     <string name="settings_text_prefix_down_desc">Download text prefix, current: %1$s</string>
     <string name="settings_show_up_first">Prioritize Upload Speed</string>
     <string name="settings_show_up_first_desc">Show upload speed before download speed</string>
+    <string name="settings_overlay_direction">Layout Direction</string>
+    <string name="settings_overlay_direction_horizontal">Horizontal (Single Line)</string>
+    <string name="settings_overlay_direction_vertical">Vertical (Stacked)</string>
+    <string name="settings_overlay_alignment">Text Alignment</string>
+    <string name="settings_overlay_alignment_start">Left</string>
+    <string name="settings_overlay_alignment_center">Center</string>
+    <string name="settings_overlay_alignment_end">Right</string>
     <string name="settings_category_notification">Notification Settings</string>
     <string name="config_enable_live_update">Enable Live Update</string>
     <string name="config_enable_live_update_desc">Use status bar chip (Requires Android 16+)</string>

@@ -53,6 +53,13 @@
     <string name="settings_text_prefix_down_desc">显示下行流量的文本前缀，当前值为：%1$s</string>
     <string name="settings_show_up_first">优先显示上行</string>
     <string name="settings_show_up_first_desc">上行流量显示在前面</string>
+    <string name="settings_overlay_direction">排列方向</string>
+    <string name="settings_overlay_direction_horizontal">水平 (横向单行)</string>
+    <string name="settings_overlay_direction_vertical">垂直 (上下堆叠)</string>
+    <string name="settings_overlay_alignment">文本对齐方式</string>
+    <string name="settings_overlay_alignment_start">左对齐</string>
+    <string name="settings_overlay_alignment_center">居中对齐</string>
+    <string name="settings_overlay_alignment_end">右对齐</string>
     <string name="settings_category_notification">通知设置</string>
     <string name="config_enable_live_update">启用实时更新</string>
     <string name="config_enable_live_update_desc">使用实时网速更新通知栏 (需要 Android 16+ 版本)</string>

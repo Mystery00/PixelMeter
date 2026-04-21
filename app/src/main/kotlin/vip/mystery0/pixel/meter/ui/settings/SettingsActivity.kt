@@ -288,6 +288,8 @@ fun OverlaySection(viewModel: SettingsViewModel) {
     val textUp by viewModel.overlayTextUp.collectAsState(initial = "▲ ")
     val textDown by viewModel.overlayTextDown.collectAsState(initial = "▼ ")
     val upFirst by viewModel.overlayOrderUpFirst.collectAsState(initial = true)
+    val direction by viewModel.overlayDirection.collectAsState(initial = 0)
+    val alignment by viewModel.overlayAlignment.collectAsState(initial = 0)
 
     PreferenceCategory(title = { Text(stringResource(R.string.settings_category_overlay)) })
     val isSwitchEnabled = !isServiceRunning || canOverlay
@@ -373,6 +375,52 @@ fun OverlaySection(viewModel: SettingsViewModel) {
             onValueChange = { viewModel.setOverlayOrderUpFirst(it) },
             title = { Text(stringResource(R.string.settings_show_up_first)) },
             summary = { Text(stringResource(R.string.settings_show_up_first_desc)) }
+        )
+
+        val labelHorizontal = stringResource(R.string.settings_overlay_direction_horizontal)
+        val labelVertical = stringResource(R.string.settings_overlay_direction_vertical)
+        val directionLabel = when (direction) {
+            1 -> labelVertical
+            else -> labelHorizontal
+        }
+
+        ListPreference(
+            value = directionLabel,
+            onValueChange = {
+                val dir = when (it) {
+                    labelVertical -> 1
+                    else -> 0
+                }
+                viewModel.setOverlayDirection(dir)
+            },
+            title = { Text(stringResource(R.string.settings_overlay_direction)) },
+            values = listOf(labelHorizontal, labelVertical),
+            summary = { Text(directionLabel) }
+        )
+
+        val labelAlignStart = stringResource(R.string.settings_overlay_alignment_start)
+        val labelAlignCenter = stringResource(R.string.settings_overlay_alignment_center)
+        val labelAlignEnd = stringResource(R.string.settings_overlay_alignment_end)
+        val alignmentLabel = when (alignment) {
+            1 -> labelAlignCenter
+            2 -> labelAlignEnd
+            else -> labelAlignStart
+        }
+
+        ListPreference(
+            value = alignmentLabel,
+            onValueChange = {
+                val align = when (it) {
+                    labelAlignCenter -> 1
+                    labelAlignEnd -> 2
+                    else -> 0
+                }
+                viewModel.setOverlayAlignment(align)
+            },
+            title = { Text(stringResource(R.string.settings_overlay_alignment)) },
+            values = listOf(labelAlignStart, labelAlignCenter, labelAlignEnd),
+            summary = { Text(alignmentLabel) },
+            enabled = direction == 1
         )
     }
 }

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -118,6 +119,8 @@ class OverlayWindow(
                     val textUp by repository.overlayTextUp.collectAsState()
                     val textDown by repository.overlayTextDown.collectAsState()
                     val upFirst by repository.overlayOrderUpFirst.collectAsState()
+                    val direction by repository.overlayDirection.collectAsState()
+                    val alignment by repository.overlayAlignment.collectAsState()
                     val isOverlayUseDefaultColors by repository.isOverlayUseDefaultColors.collectAsState()
                     val speedUnit by repository.speedUnit.collectAsState()
 
@@ -167,6 +170,8 @@ class OverlayWindow(
                         textUp = textUp,
                         textDown = textDown,
                         upFirst = upFirst,
+                        direction = direction,
+                        alignment = alignment,
                         speedUnit = speedUnit,
                         onDrag = { x, y ->
                             if (!isLocked) {
@@ -223,6 +228,8 @@ fun OverlayContent(
     textUp: String,
     textDown: String,
     upFirst: Boolean,
+    direction: Int = 0,
+    alignment: Int = 0,
     speedUnit: Int = 0,
     onDrag: (Float, Float) -> Unit,
     onDragEnd: () -> Unit
@@ -244,25 +251,57 @@ fun OverlayContent(
         val downText =
             "$textDown${NetworkRepository.formatSpeedLine(speed.downloadSpeed, speedUnit)}"
 
-        Row(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = if (upFirst) upText else downText,
-                style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
-                color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
-                    textColor
+        val text1 = if (upFirst) upText else downText
+        val text2 = if (upFirst) downText else upText
+
+        if (direction == 0) {
+            // Horizontal
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = text1,
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
+                    color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
+                        textColor
+                    )
                 )
-            )
-            Box(modifier = Modifier.padding(horizontal = 4.dp))
-            Text(
-                text = if (upFirst) downText else upText,
-                style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
-                color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
-                    textColor
+                Box(modifier = Modifier.padding(horizontal = 4.dp))
+                Text(
+                    text = text2,
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
+                    color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
+                        textColor
+                    )
                 )
-            )
+            }
+        } else {
+            // Vertical
+            val horizontalAlignment = when (alignment) {
+                1 -> Alignment.CenterHorizontally
+                2 -> Alignment.End
+                else -> Alignment.Start
+            }
+            Column(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                horizontalAlignment = horizontalAlignment
+            ) {
+                Text(
+                    text = text1,
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
+                    color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
+                        textColor
+                    )
+                )
+                Text(
+                    text = text2,
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
+                    color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
+                        textColor
+                    )
+                )
+            }
         }
     }
 }
