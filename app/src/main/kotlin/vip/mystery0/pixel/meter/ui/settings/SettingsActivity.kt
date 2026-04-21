@@ -288,6 +288,7 @@ fun OverlaySection(viewModel: SettingsViewModel) {
     val textUp by viewModel.overlayTextUp.collectAsState(initial = "▲ ")
     val textDown by viewModel.overlayTextDown.collectAsState(initial = "▼ ")
     val upFirst by viewModel.overlayOrderUpFirst.collectAsState(initial = true)
+    val isOverlayPortraitOnly by viewModel.isOverlayPortraitOnly.collectAsState(initial = false)
     val direction by viewModel.overlayDirection.collectAsState(initial = 0)
     val alignment by viewModel.overlayAlignment.collectAsState(initial = 0)
 
@@ -318,6 +319,12 @@ fun OverlaySection(viewModel: SettingsViewModel) {
             onValueChange = { viewModel.setOverlayShowOnStatusBar(it) },
             title = { Text(stringResource(R.string.settings_overlay_show_on_status_bar)) },
             summary = { Text(stringResource(R.string.settings_overlay_show_on_status_bar_desc)) }
+        )
+        SwitchPreference(
+            value = isOverlayPortraitOnly,
+            onValueChange = { viewModel.setOverlayPortraitOnly(it) },
+            title = { Text(stringResource(R.string.settings_overlay_portrait_only)) },
+            summary = { Text(stringResource(R.string.settings_overlay_portrait_only_desc)) }
         )
         SwitchPreference(
             value = isOverlayUseDefaultColors,

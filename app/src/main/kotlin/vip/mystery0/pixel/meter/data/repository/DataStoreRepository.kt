@@ -59,6 +59,7 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
         val KEY_SPEED_UNIT = intPreferencesKey("key_speed_unit")
         val KEY_OVERLAY_DIRECTION = intPreferencesKey("key_overlay_direction")
         val KEY_OVERLAY_ALIGNMENT = intPreferencesKey("key_overlay_alignment")
+        val KEY_OVERLAY_PORTRAIT_ONLY = booleanPreferencesKey("key_overlay_portrait_only")
     }
 
     val isLiveUpdateEnabled: Flow<Boolean> = dataStore.data
@@ -397,6 +398,17 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun setSpeedUnit(unit: Int) {
         dataStore.edit { preferences ->
             preferences[KEY_SPEED_UNIT] = unit
+        }
+    }
+
+    val isOverlayPortraitOnly: Flow<Boolean> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_OVERLAY_PORTRAIT_ONLY] ?: false
+        }
+
+    suspend fun setOverlayPortraitOnly(portraitOnly: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[KEY_OVERLAY_PORTRAIT_ONLY] = portraitOnly
         }
     }
 }

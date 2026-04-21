@@ -41,6 +41,7 @@ class SettingsViewModel(
     val overlayAlignment = repository.overlayAlignment
     val isOverlayLocked = repository.isOverlayLocked
     val isOverlayShowOnStatusBar = repository.isOverlayShowOnStatusBar
+    val isOverlayPortraitOnly = repository.isOverlayPortraitOnly
 
     // Notification Settings
     val isNotificationEnabled = repository.isNotificationEnabled
@@ -99,6 +100,8 @@ class SettingsViewModel(
     fun setOverlayEnabled(enabled: Boolean) = repository.setOverlayEnabled(enabled)
     fun setOverlayLocked(locked: Boolean) = repository.setOverlayLocked(locked)
     fun setOverlayShowOnStatusBar(show: Boolean) = repository.setOverlayShowOnStatusBar(show)
+    fun setOverlayPortraitOnly(portraitOnly: Boolean) =
+        repository.setOverlayPortraitOnly(portraitOnly)
 
     fun setSamplingInterval(interval: Long) = repository.setSamplingInterval(interval)
     fun setHideFromRecents(hide: Boolean) = repository.setHideFromRecents(hide)

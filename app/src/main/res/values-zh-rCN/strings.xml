@@ -41,6 +41,8 @@
     <string name="config_lock_overlay_desc">防止悬浮窗被移动</string>
     <string name="settings_overlay_show_on_status_bar">允许显示到状态栏区域</string>
     <string name="settings_overlay_show_on_status_bar_desc">开启后悬浮窗可以被拖拽到状态栏上方，并适配刘海屏区域，关闭时按默认状态显示</string>
+    <string name="settings_overlay_portrait_only">仅在竖屏显示</string>
+    <string name="settings_overlay_portrait_only_desc">在横屏模式下自动隐藏悬浮窗</string>
     <string name="settings_overlay_use_default_colors">使用默认颜色</string>
     <string name="settings_overlay_use_default_colors_desc">悬浮窗颜色跟随系统主题（深色/浅色）自动调整</string>
     <string name="settings_overlay_bg_color">背景颜色</string>

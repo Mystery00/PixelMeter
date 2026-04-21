@@ -73,6 +73,9 @@ class NetworkRepository(
     private val _overlayAlignment = MutableStateFlow(0)
     val overlayAlignment: StateFlow<Int> = _overlayAlignment.asStateFlow()
 
+    private val _isOverlayPortraitOnly = MutableStateFlow(false)
+    val isOverlayPortraitOnly: StateFlow<Boolean> = _isOverlayPortraitOnly.asStateFlow()
+
     private val _notificationTextUp = MutableStateFlow("▲ ")
     val notificationTextUp: StateFlow<String> = _notificationTextUp.asStateFlow()
 
@@ -149,6 +152,8 @@ class NetworkRepository(
                     prefs[DataStoreRepository.KEY_OVERLAY_DIRECTION] ?: 0
                 _overlayAlignment.value =
                     prefs[DataStoreRepository.KEY_OVERLAY_ALIGNMENT] ?: 0
+                _isOverlayPortraitOnly.value =
+                    prefs[DataStoreRepository.KEY_OVERLAY_PORTRAIT_ONLY] ?: false
                 _notificationTextUp.value =
                     prefs[DataStoreRepository.KEY_NOTIFICATION_TEXT_UP] ?: "▲ "
                 _notificationTextDown.value =
@@ -222,6 +227,9 @@ class NetworkRepository(
         }
         scope.launch {
             dataStoreRepository.overlayAlignment.collect { _overlayAlignment.value = it }
+        }
+        scope.launch {
+            dataStoreRepository.isOverlayPortraitOnly.collect { _isOverlayPortraitOnly.value = it }
         }
         scope.launch {
             dataStoreRepository.notificationTextUp.collect { _notificationTextUp.value = it }
@@ -349,6 +357,10 @@ class NetworkRepository(
 
     fun setOverlayAlignment(alignment: Int) {
         scope.launch { dataStoreRepository.setOverlayAlignment(alignment) }
+    }
+
+    fun setOverlayPortraitOnly(portraitOnly: Boolean) {
+        scope.launch { dataStoreRepository.setOverlayPortraitOnly(portraitOnly) }
     }
 
     fun setNotificationTextUp(text: String) {
