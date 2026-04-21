@@ -1,8 +1,7 @@
 * **Feature: Overlay Window (功能：悬浮窗)**
-  * **Status Bar Overlay**: Added support for displaying the overlay window over the status bar and
-    notch areas.
-  * **状态栏悬浮窗**: 支持悬浮窗显示在状态栏及刘海屏区域。
-
-* **Improvement: Project & Dependencies (优化：项目与依赖)**
-  * **Project Update**: Updated project version and dependency libraries.
-  * **项目更新**: 更新项目版本及依赖库。
+  * **Hide in Landscape**: Added a new setting to automatically hide the overlay window when the
+    device is in landscape mode.
+  * **横屏隐藏**: 新增“仅在竖屏显示”选项，自动在横屏游戏或全屏视频时隐藏悬浮窗防止遮盖。
+  * **Layout Customization**: Added options to customize overlay layout between horizontal and
+    vertical direction, along with text alignment settings.
+  * **排版定制**: 新增支持在设置中自定义悬浮窗的“排版方向（横向/纵向）”与“对齐方式”。
