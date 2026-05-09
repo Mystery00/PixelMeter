@@ -672,6 +672,11 @@ fun AboutSection() {
         summary = { Text("https://github.com/Pixel-Tailor-CN/PixelMeter") },
         onClick = { uriHandler.openUri("https://github.com/Pixel-Tailor-CN/PixelMeter") }
     )
+    Preference(
+        title = { Text(stringResource(R.string.settings_pixel_tailor)) },
+        summary = { Text(stringResource(R.string.settings_pixel_tailor_desc)) },
+        onClick = { uriHandler.openUri("https://github.com/Pixel-Tailor-CN") }
+    )
 }
 
 @Composable

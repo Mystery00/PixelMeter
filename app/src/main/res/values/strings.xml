@@ -98,6 +98,8 @@
     <string name="settings_category_about">About</string>
     <string name="settings_app_version">App Version</string>
     <string name="settings_github">GitHub</string>
+    <string name="settings_pixel_tailor">Pixel Tailor</string>
+    <string name="settings_pixel_tailor_desc">Tailoring the pure Android experience for Pixel users in China</string>
 
     <string name="color_picker_title">Select Color</string>
 

@@ -97,6 +97,8 @@
     <string name="settings_category_about">关于</string>
     <string name="settings_app_version">应用版本</string>
     <string name="settings_github">GitHub</string>
+    <string name="settings_pixel_tailor">Pixel Tailor</string>
+    <string name="settings_pixel_tailor_desc">为中国 Pixel 用户精心缝补纯净 Android 体验</string>
 
     <string name="color_picker_title">选择颜色</string>
 

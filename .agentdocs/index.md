@@ -25,5 +25,5 @@
 
 ## 🔗 相关资源
 
-- [GitHub Repository](https://github.com/Mystery00/PixelMeter)
+- [GitHub Repository](https://github.com/Pixel-Tailor-CN/PixelMeter)
 - [GEMINI Development Guidelines](../GEMINI.md)
