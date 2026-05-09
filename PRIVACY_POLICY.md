@@ -52,4 +52,4 @@ this page.
 ## 6. Contact Us
 
 If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us by
-submitting an issue on our [GitHub Repository](https://github.com/Mystery00/PixelMeter).
+submitting an issue on our [GitHub Repository](https://github.com/Pixel-Tailor-CN/PixelMeter).

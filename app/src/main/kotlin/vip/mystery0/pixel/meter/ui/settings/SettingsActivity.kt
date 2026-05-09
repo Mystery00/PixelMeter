@@ -669,8 +669,8 @@ fun AboutSection() {
     )
     Preference(
         title = { Text(stringResource(R.string.settings_github)) },
-        summary = { Text("https://github.com/Mystery00/PixelMeter") },
-        onClick = { uriHandler.openUri("https://github.com/Mystery00/PixelMeter") }
+        summary = { Text("https://github.com/Pixel-Tailor-CN/PixelMeter") },
+        onClick = { uriHandler.openUri("https://github.com/Pixel-Tailor-CN/PixelMeter") }
     )
 }
 

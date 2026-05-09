@@ -39,5 +39,5 @@ Cloudflare 的隐私政策以及您浏览器的隐私设置管辖。
 
 ## 6. 联系我们
 
-如果您对我们的隐私政策有任何疑问或建议，请随时通过我们的 [GitHub 项目主页](https://github.com/Mystery00/PixelMeter)
+如果您对我们的隐私政策有任何疑问或建议，请随时通过我们的 [GitHub 项目主页](https://github.com/Pixel-Tailor-CN/PixelMeter)
 提交 Issue 与我们联系。
