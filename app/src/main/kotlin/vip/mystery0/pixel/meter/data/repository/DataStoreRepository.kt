@@ -57,6 +57,7 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
             booleanPreferencesKey("key_notification_use_custom_color")
         val KEY_NOTIFICATION_COLOR = intPreferencesKey("key_notification_color")
         val KEY_SPEED_UNIT = intPreferencesKey("key_speed_unit")
+        val KEY_MIN_SPEED_UNIT = intPreferencesKey("key_min_speed_unit")
         val KEY_OVERLAY_DIRECTION = intPreferencesKey("key_overlay_direction")
         val KEY_OVERLAY_ALIGNMENT = intPreferencesKey("key_overlay_alignment")
         val KEY_OVERLAY_PORTRAIT_ONLY = booleanPreferencesKey("key_overlay_portrait_only")
@@ -398,6 +399,17 @@ class DataStoreRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun setSpeedUnit(unit: Int) {
         dataStore.edit { preferences ->
             preferences[KEY_SPEED_UNIT] = unit
+        }
+    }
+
+    val minSpeedUnit: Flow<Int> = dataStore.data
+        .map { preferences ->
+            preferences[KEY_MIN_SPEED_UNIT] ?: 0
+        }
+
+    suspend fun setMinSpeedUnit(unit: Int) {
+        dataStore.edit { preferences ->
+            preferences[KEY_MIN_SPEED_UNIT] = unit
         }
     }
 

@@ -28,7 +28,10 @@
     <string name="settings_sampling_interval_desc">过低的间隔时间会导致结果准确度降低，过高的间隔时间结果更准确，但是更新的很慢</string>
     <string name="settings_speed_unit_title">网速单位</string>
     <string name="settings_speed_unit_desc">锁定网速显示的计量单位</string>
+    <string name="settings_min_speed_unit_title">最小显示单位</string>
+    <string name="settings_min_speed_unit_desc">当网速低于此单位时显示为0，仅在“网速单位”为自动时生效</string>
     <string name="settings_speed_unit_auto">自动</string>
+    <string name="settings_min_speed_unit_none">无</string>
     <string name="settings_auto_start_service_title">自动启动监听服务</string>
     <string name="settings_auto_start_service_desc">开机后自动启动网速监听服务</string>
     <string name="settings_auto_start_disabled_reason">需要悬浮窗或通知权限</string>

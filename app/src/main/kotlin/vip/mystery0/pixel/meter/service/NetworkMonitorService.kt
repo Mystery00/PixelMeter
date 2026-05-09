@@ -135,12 +135,13 @@ class NetworkMonitorService : Service() {
                     val useCustomColor = repository.notificationUseCustomColor.value
                     val color = repository.notificationColor.value
                     val speedUnit = repository.speedUnit.value
+                    val minSpeedUnit = repository.minSpeedUnit.value
 
                     notificationHelper.buildNotification(
                         speed, isLiveUpdate, isNotificationEnabled,
                         textUp, textDown, upFirst, displayMode,
                         textSize, unitSize, threshold, lowTrafficMode,
-                        useCustomColor, color, speedUnit
+                        useCustomColor, color, speedUnit, minSpeedUnit
                     )
                 }
                 notificationManager.notify(NotificationHelper.NOTIFICATION_ID, notification)

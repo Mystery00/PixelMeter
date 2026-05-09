@@ -86,6 +86,7 @@ class MainActivity : ComponentActivity() {
         val isHideFromRecents by viewModel.isHideFromRecents.collectAsState(initial = false)
         val serviceError by viewModel.serviceStartError.collectAsState()
         val speedUnit by viewModel.speedUnit.collectAsState()
+        val minSpeedUnit by viewModel.minSpeedUnit.collectAsState()
 
         LaunchedEffect(isHideFromRecents) {
             val activityManager =
@@ -133,7 +134,7 @@ class MainActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
-                    SpeedDashboardCard(speed, speedUnit)
+                    SpeedDashboardCard(speed, speedUnit, minSpeedUnit)
                 }
 
                 // Service Permission Error Card
@@ -331,7 +332,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun SpeedDashboardCard(speed: NetSpeedData, speedUnit: Int = 0) {
+fun SpeedDashboardCard(speed: NetSpeedData, speedUnit: Int = 0, minSpeedUnit: Int = 0) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -346,7 +347,7 @@ fun SpeedDashboardCard(speed: NetSpeedData, speedUnit: Int = 0) {
                 style = MaterialTheme.typography.labelMedium
             )
             Text(
-                NetworkRepository.formatSpeedLine(speed.totalSpeed, speedUnit),
+                NetworkRepository.formatSpeedLine(speed.totalSpeed, speedUnit, minSpeedUnit),
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -361,7 +362,11 @@ fun SpeedDashboardCard(speed: NetSpeedData, speedUnit: Int = 0) {
                         style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        "▼ " + NetworkRepository.formatSpeedLine(speed.downloadSpeed, speedUnit),
+                        "▼ " + NetworkRepository.formatSpeedLine(
+                            speed.downloadSpeed,
+                            speedUnit,
+                            minSpeedUnit
+                        ),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -371,7 +376,11 @@ fun SpeedDashboardCard(speed: NetSpeedData, speedUnit: Int = 0) {
                         style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        "▲ " + NetworkRepository.formatSpeedLine(speed.uploadSpeed, speedUnit),
+                        "▲ " + NetworkRepository.formatSpeedLine(
+                            speed.uploadSpeed,
+                            speedUnit,
+                            minSpeedUnit
+                        ),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }

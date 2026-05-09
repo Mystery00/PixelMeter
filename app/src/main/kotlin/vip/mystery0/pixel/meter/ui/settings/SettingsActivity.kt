@@ -138,6 +138,7 @@ fun GeneralSection(viewModel: SettingsViewModel) {
     val context = LocalContext.current
     val interval by viewModel.samplingInterval.collectAsState(initial = 1500L)
     val speedUnit by viewModel.speedUnit.collectAsState(initial = 0)
+    val minSpeedUnit by viewModel.minSpeedUnit.collectAsState(initial = 0)
     val isAutoStartEnabled by viewModel.isAutoStartServiceEnabled.collectAsState(initial = false)
     val canEnableAutoStart by viewModel.canEnableAutoStart.collectAsState()
     val hasOverlayPermission by viewModel.canOverlay.collectAsState()
@@ -181,6 +182,31 @@ fun GeneralSection(viewModel: SettingsViewModel) {
         title = { Text(stringResource(R.string.settings_speed_unit_title)) },
         values = speedUnitValues,
         summary = { Text(stringResource(R.string.settings_speed_unit_desc)) }
+    )
+
+    val labelNone = stringResource(R.string.settings_min_speed_unit_none)
+    val minSpeedUnitValues = listOf(labelNone, "KB/s", "MB/s", "GB/s")
+    val minSpeedUnitLabel = when (minSpeedUnit) {
+        1 -> "KB/s"
+        2 -> "MB/s"
+        3 -> "GB/s"
+        else -> labelNone
+    }
+    ListPreference(
+        value = minSpeedUnitLabel,
+        onValueChange = {
+            val unit = when (it) {
+                "KB/s" -> 1
+                "MB/s" -> 2
+                "GB/s" -> 3
+                else -> 0
+            }
+            viewModel.setMinSpeedUnit(unit)
+        },
+        title = { Text(stringResource(R.string.settings_min_speed_unit_title)) },
+        values = minSpeedUnitValues,
+        summary = { Text(stringResource(R.string.settings_min_speed_unit_desc)) },
+        enabled = speedUnit == 0 // Only effective when Auto mode is enabled
     )
 
     val autoStartSummary = if (canEnableAutoStart) {

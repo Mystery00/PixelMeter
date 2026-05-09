@@ -129,6 +129,7 @@ class OverlayWindow(
                     val isOverlayPortraitOnly by repository.isOverlayPortraitOnly.collectAsState()
                     val isOverlayUseDefaultColors by repository.isOverlayUseDefaultColors.collectAsState()
                     val speedUnit by repository.speedUnit.collectAsState()
+                    val minSpeedUnit by repository.minSpeedUnit.collectAsState()
                     val context = LocalContext.current
                     val initialConfig = LocalConfiguration.current
                     var orientation by remember { mutableStateOf(initialConfig.orientation) }
@@ -200,6 +201,7 @@ class OverlayWindow(
                         direction = direction,
                         alignment = alignment,
                         speedUnit = speedUnit,
+                        minSpeedUnit = minSpeedUnit,
                         onDrag = { x, y ->
                             if (!isLocked) {
                                 params?.let { p ->
@@ -258,6 +260,7 @@ fun OverlayContent(
     direction: Int = 0,
     alignment: Int = 0,
     speedUnit: Int = 0,
+    minSpeedUnit: Int = 0,
     onDrag: (Float, Float) -> Unit,
     onDragEnd: () -> Unit
 ) {
@@ -274,8 +277,10 @@ fun OverlayContent(
             )
         }
     ) {
-        val upSpeedStr = NetworkRepository.formatSpeedLine(speed.uploadSpeed, speedUnit)
-        val downSpeedStr = NetworkRepository.formatSpeedLine(speed.downloadSpeed, speedUnit)
+        val upSpeedStr =
+            NetworkRepository.formatSpeedLine(speed.uploadSpeed, speedUnit, minSpeedUnit)
+        val downSpeedStr =
+            NetworkRepository.formatSpeedLine(speed.downloadSpeed, speedUnit, minSpeedUnit)
 
         val prefix1 = if (upFirst) textUp else textDown
         val prefix2 = if (upFirst) textDown else textUp

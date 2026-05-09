@@ -118,6 +118,9 @@ class NetworkRepository(
     private val _speedUnit = MutableStateFlow(0)
     val speedUnit: StateFlow<Int> = _speedUnit.asStateFlow()
 
+    private val _minSpeedUnit = MutableStateFlow(0)
+    val minSpeedUnit: StateFlow<Int> = _minSpeedUnit.asStateFlow()
+
     private var monitoringJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.Default)
 
@@ -179,6 +182,7 @@ class NetworkRepository(
                     prefs[DataStoreRepository.KEY_NOTIFICATION_USE_CUSTOM_COLOR] ?: false
                 _notificationColor.value = prefs[DataStoreRepository.KEY_NOTIFICATION_COLOR] ?: 0
                 _speedUnit.value = prefs[DataStoreRepository.KEY_SPEED_UNIT] ?: 0
+                _minSpeedUnit.value = prefs[DataStoreRepository.KEY_MIN_SPEED_UNIT] ?: 0
             }
         }
         scope.launch {
@@ -295,6 +299,11 @@ class NetworkRepository(
         scope.launch {
             dataStoreRepository.speedUnit.collect {
                 _speedUnit.value = it
+            }
+        }
+        scope.launch {
+            dataStoreRepository.minSpeedUnit.collect {
+                _minSpeedUnit.value = it
             }
         }
     }
@@ -419,6 +428,10 @@ class NetworkRepository(
         scope.launch { dataStoreRepository.setSpeedUnit(unit) }
     }
 
+    fun setMinSpeedUnit(unit: Int) {
+        scope.launch { dataStoreRepository.setMinSpeedUnit(unit) }
+    }
+
     suspend fun getOverlayPosition(): Pair<Int, Int> {
         val x = dataStoreRepository.overlayX.first()
         val y = dataStoreRepository.overlayY.first()
@@ -509,7 +522,28 @@ class NetworkRepository(
             return pattern.format(Locale.getDefault(), value)
         }
 
-        fun formatSpeedTextForLiveUpdate(bytes: Long, speedUnit: Int = 0): String {
+        fun formatSpeedTextForLiveUpdate(
+            bytes: Long,
+            speedUnit: Int = 0,
+            minSpeedUnit: Int = 0
+        ): String {
+            if (minSpeedUnit > 0 && speedUnit == 0) {
+                val threshold = when (minSpeedUnit) {
+                    1 -> 1024L
+                    2 -> 1048576L
+                    3 -> 1073741824L
+                    else -> 0L
+                }
+                if (bytes < threshold) {
+                    return "0" + when (minSpeedUnit) {
+                        1 -> "K/s"
+                        2 -> "M/s"
+                        3 -> "G/s"
+                        else -> "B/s"
+                    }
+                }
+            }
+
             when (speedUnit) {
                 1 -> return "${formatFixedValue(bytes.toDouble())}B/s"
                 2 -> return "${formatFixedValue(bytes / 1024.0)}K/s"
@@ -529,7 +563,29 @@ class NetworkRepository(
             return "${"%.1f".format(Locale.getDefault(), gb)}G/s"
         }
 
-        fun formatSpeedText(bytes: Long, speedUnit: Int = 0): Pair<String, String> {
+        fun formatSpeedText(
+            bytes: Long,
+            speedUnit: Int = 0,
+            minSpeedUnit: Int = 0
+        ): Pair<String, String> {
+            if (minSpeedUnit > 0 && speedUnit == 0) {
+                val threshold = when (minSpeedUnit) {
+                    1 -> 1024L
+                    2 -> 1048576L
+                    3 -> 1073741824L
+                    else -> 0L
+                }
+                if (bytes < threshold) {
+                    val unitStr = when (minSpeedUnit) {
+                        1 -> "KB/s"
+                        2 -> "MB/s"
+                        3 -> "GB/s"
+                        else -> "B/s"
+                    }
+                    return "0" to unitStr
+                }
+            }
+
             when (speedUnit) {
                 1 -> return formatFixedValue(bytes.toDouble()) to "B/s"
                 2 -> return formatFixedValue(bytes / 1024.0) to "KB/s"
@@ -549,8 +605,8 @@ class NetworkRepository(
             return "%.1f".format(Locale.getDefault(), gb) to "GB/s"
         }
 
-        fun formatSpeedLine(bytes: Long, speedUnit: Int = 0): String {
-            val (v, u) = formatSpeedText(bytes, speedUnit)
+        fun formatSpeedLine(bytes: Long, speedUnit: Int = 0, minSpeedUnit: Int = 0): String {
+            val (v, u) = formatSpeedText(bytes, speedUnit, minSpeedUnit)
             return "$v$u"
         }
     }

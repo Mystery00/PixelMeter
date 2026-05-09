@@ -29,7 +29,10 @@
     <string name="settings_sampling_interval_desc">Lower intervals reduce accuracy; higher intervals are more accurate but update slowly.</string>
     <string name="settings_speed_unit_title">Speed Unit</string>
     <string name="settings_speed_unit_desc">Lock the display unit for speed values</string>
+    <string name="settings_min_speed_unit_title">Minimum Display Unit</string>
+    <string name="settings_min_speed_unit_desc">Force 0 value for small traffic. Only active in Auto mode.</string>
     <string name="settings_speed_unit_auto">Auto</string>
+    <string name="settings_min_speed_unit_none">None</string>
     <string name="settings_auto_start_service_title">Auto-start Monitoring Service</string>
     <string name="settings_auto_start_service_desc">Start service automatically on boot</string>
     <string name="settings_auto_start_disabled_reason">Requires Overlay or Notification permission</string>

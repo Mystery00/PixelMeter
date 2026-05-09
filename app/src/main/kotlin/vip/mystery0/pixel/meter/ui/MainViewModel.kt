@@ -31,6 +31,7 @@ class MainViewModel(
     val isHideFromRecents = repository.isHideFromRecents
 
     val speedUnit = repository.speedUnit
+    val minSpeedUnit = repository.minSpeedUnit
 
     val isServiceRunning = repository.isMonitoring
 

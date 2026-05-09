@@ -89,7 +89,8 @@ class NotificationHelper(private val context: Context) {
         lowTrafficMode: Int = 0, // 0: Static, 1: Dynamic
         useCustomColor: Boolean = false,
         color: Int = 0,
-        speedUnit: Int = 0
+        speedUnit: Int = 0,
+        minSpeedUnit: Int = 0
     ): Notification {
         var shouldLiveUpdate = isLiveUpdate
         val intent = Intent().apply {
@@ -142,10 +143,26 @@ class NotificationHelper(private val context: Context) {
         if (shouldLiveUpdate) {
             // Live Update Mode
             val statusText =
-                NetworkRepository.formatSpeedTextForLiveUpdate(speed.totalSpeed, speedUnit)
-            val upText = "$textUp${NetworkRepository.formatSpeedLine(speed.uploadSpeed, speedUnit)}"
+                NetworkRepository.formatSpeedTextForLiveUpdate(
+                    speed.totalSpeed,
+                    speedUnit,
+                    minSpeedUnit
+                )
+            val upText = "$textUp${
+                NetworkRepository.formatSpeedLine(
+                    speed.uploadSpeed,
+                    speedUnit,
+                    minSpeedUnit
+                )
+            }"
             val downText =
-                "$textDown${NetworkRepository.formatSpeedLine(speed.downloadSpeed, speedUnit)}"
+                "$textDown${
+                    NetworkRepository.formatSpeedLine(
+                        speed.downloadSpeed,
+                        speedUnit,
+                        minSpeedUnit
+                    )
+                }"
 
             val contentText = when (displayMode) {
                 1 -> upText // Up Only
@@ -161,7 +178,11 @@ class NotificationHelper(private val context: Context) {
                 .setRequestPromotedOngoing(true)
         } else {
             // Standard Mode
-            val (valueStr, unitStr) = NetworkRepository.formatSpeedText(speed.totalSpeed, speedUnit)
+            val (valueStr, unitStr) = NetworkRepository.formatSpeedText(
+                speed.totalSpeed,
+                speedUnit,
+                minSpeedUnit
+            )
 
             // Draw Bitmap with speed
             bitmap.eraseColor(Color.TRANSPARENT)
@@ -178,9 +199,21 @@ class NotificationHelper(private val context: Context) {
 
             val smallIcon = IconCompat.createWithBitmap(bitmap)
 
-            val upText = "$textUp${NetworkRepository.formatSpeedLine(speed.uploadSpeed, speedUnit)}"
+            val upText = "$textUp${
+                NetworkRepository.formatSpeedLine(
+                    speed.uploadSpeed,
+                    speedUnit,
+                    minSpeedUnit
+                )
+            }"
             val downText =
-                "$textDown${NetworkRepository.formatSpeedLine(speed.downloadSpeed, speedUnit)}"
+                "$textDown${
+                    NetworkRepository.formatSpeedLine(
+                        speed.downloadSpeed,
+                        speedUnit,
+                        minSpeedUnit
+                    )
+                }"
 
             val contentText = when (displayMode) {
                 1 -> upText // Up Only
