@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
     <en-US>
-        Feature:
-        Status Bar Overlay: Added support for displaying the overlay window over the status bar and
-        notch areas.
+        New Feature:
+        Minimum Display Unit: Added a new setting to suppress small traffic values below a
+        configurable threshold in auto-unit mode, reducing visual noise from fluctuations.
+
+        Improvements:
+        Optimized vertical layout rendering for overlay window.
     </en-US>
     <zh-CN>
-        功能：
-        状态栏悬浮窗: 支持悬浮窗显示在状态栏及刘海屏区域。
+        新增功能：
+        最小显示单位: 在设置中新增"最小显示单位"选项，支持在自动单位模式下将低于指定阈值的小流量强制显示为
+        0，减少数值波动干扰。
+
+        优化改进：
+        优化悬浮窗垂直布局显示效果。
     </zh-CN>
 </root>

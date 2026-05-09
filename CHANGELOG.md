@@ -1,7 +1,12 @@
-* **Feature: Overlay Window (功能：悬浮窗)**
-  * **Hide in Landscape**: Added a new setting to automatically hide the overlay window when the
-    device is in landscape mode.
-  * **横屏隐藏**: 新增“仅在竖屏显示”选项，自动在横屏游戏或全屏视频时隐藏悬浮窗防止遮盖。
-  * **Layout Customization**: Added options to customize overlay layout between horizontal and
-    vertical direction, along with text alignment settings.
-  * **排版定制**: 新增支持在设置中自定义悬浮窗的“排版方向（横向/纵向）”与“对齐方式”。
+## 新增功能 / New Features
+
+* **最小显示单位配置 / Minimum Display Unit**
+  * 在设置中新增"最小显示单位"选项，支持在自动单位模式下将低于指定阈值的小流量强制显示为 0，减少数值波动干扰
+  * Added "Minimum Display Unit" setting to suppress small traffic values below a threshold in
+    auto-unit mode, reducing visual noise from fluctuations
+
+## 优化改进 / Improvements
+
+* **悬浮窗布局优化 / Overlay Layout Optimization**
+  * 优化悬浮窗垂直布局显示效果
+  * Improved vertical layout rendering for overlay window
