@@ -4,7 +4,6 @@ import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.PixelFormat
-import android.os.Build
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -103,7 +102,7 @@ class OverlayWindow(
                 gravity = Gravity.TOP or Gravity.START
                 x = initialX
                 y = initialY
-                if (isShowOnStatusBarInitially && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                if (isShowOnStatusBarInitially) {
                     layoutInDisplayCutoutMode =
                         WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
                 }
@@ -157,12 +156,10 @@ class OverlayWindow(
                                         p.flags or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                                     changed = true
                                 }
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                                    if (p.layoutInDisplayCutoutMode != WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES) {
-                                        p.layoutInDisplayCutoutMode =
-                                            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-                                        changed = true
-                                    }
+                                if (p.layoutInDisplayCutoutMode != WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES) {
+                                    p.layoutInDisplayCutoutMode =
+                                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                                    changed = true
                                 }
                             } else {
                                 if ((p.flags and WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) != 0) {
@@ -170,12 +167,10 @@ class OverlayWindow(
                                         p.flags and WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS.inv()
                                     changed = true
                                 }
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                                    if (p.layoutInDisplayCutoutMode != WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT) {
-                                        p.layoutInDisplayCutoutMode =
-                                            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
-                                        changed = true
-                                    }
+                                if (p.layoutInDisplayCutoutMode != WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT) {
+                                    p.layoutInDisplayCutoutMode =
+                                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
+                                    changed = true
                                 }
                             }
                             if (changed) {
@@ -279,12 +274,16 @@ fun OverlayContent(
             )
         }
     ) {
-        val upText = "$textUp${NetworkRepository.formatSpeedLine(speed.uploadSpeed, speedUnit)}"
-        val downText =
-            "$textDown${NetworkRepository.formatSpeedLine(speed.downloadSpeed, speedUnit)}"
+        val upSpeedStr = NetworkRepository.formatSpeedLine(speed.uploadSpeed, speedUnit)
+        val downSpeedStr = NetworkRepository.formatSpeedLine(speed.downloadSpeed, speedUnit)
 
-        val text1 = if (upFirst) upText else downText
-        val text2 = if (upFirst) downText else upText
+        val prefix1 = if (upFirst) textUp else textDown
+        val prefix2 = if (upFirst) textDown else textUp
+        val speed1 = if (upFirst) upSpeedStr else downSpeedStr
+        val speed2 = if (upFirst) downSpeedStr else upSpeedStr
+
+        val text1 = "$prefix1$speed1"
+        val text2 = "$prefix2$speed2"
 
         if (direction == 0) {
             // Horizontal
@@ -315,24 +314,46 @@ fun OverlayContent(
                 2 -> Alignment.End
                 else -> Alignment.Start
             }
-            Column(
+            Row(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                horizontalAlignment = horizontalAlignment
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = text1,
-                    style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
-                    color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
-                        textColor
+                Column(
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = prefix1,
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
+                        color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
+                            textColor
+                        )
                     )
-                )
-                Text(
-                    text = text2,
-                    style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
-                    color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
-                        textColor
+                    Text(
+                        text = prefix2,
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
+                        color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
+                            textColor
+                        )
                     )
-                )
+                }
+                Column(
+                    horizontalAlignment = horizontalAlignment
+                ) {
+                    Text(
+                        text = speed1,
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
+                        color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
+                            textColor
+                        )
+                    )
+                    Text(
+                        text = speed2,
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = textSize.sp),
+                        color = if (useDefaultColors) MaterialTheme.colorScheme.onSurface else Color(
+                            textColor
+                        )
+                    )
+                }
             }
         }
     }
