@@ -57,6 +57,16 @@ Pixel Meter 是一款专为 Google Pixel 和原生 Android 设备设计的网速
 - **依赖注入**: Koin
 - **核心数据源**: `TrafficStats` + `ConnectivityManager` (单一可信数据源)
 
+## 相关链接
+
+- **Pixel Tailor CN**: [https://pixel.mystery0.app](https://pixel.mystery0.app)  
+  “为不完美的体验，做精细的缝补。” 专注于提升 Google Pixel 国内使用体验的开源工具集，强调原生 Android
+  体验、隐私至上与 Material You 适配。
+
+- **问题反馈**: [GitHub Issues](https://github.com/Pixel-Tailor-CN/PixelMeter/issues/new)
+
+- **Telegram 频道**: [t.me/pixel_tailor_cn](https://t.me/pixel_tailor_cn)
+
 ## 许可证
 
 本项目采用 Apache License 2.0 许可证。详情请参阅 [LICENSE](LICENSE) 文件。
